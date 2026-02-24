@@ -1,7 +1,7 @@
 import { UserPlus } from 'lucide-react'
 import { useState } from 'react'
 import { ToggleCard } from '../../../components/ToggleCard'
-import { Bed, Check, RotateCcw, Rocket , CheckCircle } from 'lucide-react'
+import { Bed, RotateCcw, Rocket , CheckCircle } from 'lucide-react'
 import { Link } from 'react-router'
 import { registerSingleStudent } from '../../../services/student'
 import type { StudentFormData, StudentRegisterInput } from "@/types/student"
