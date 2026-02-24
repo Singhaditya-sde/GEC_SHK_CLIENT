@@ -1,53 +1,77 @@
 import { UserPlus } from 'lucide-react'
 import { useState } from 'react'
 import { ToggleCard } from '../../../components/ToggleCard'
-import { Bed, ShieldCheck, Check, RotateCcw, Rocket } from 'lucide-react'
+import { Bed, Check, RotateCcw, Rocket , CheckCircle } from 'lucide-react'
 import { Link } from 'react-router'
+import { registerSingleStudent } from '../../../services/student'
+import type { StudentFormData, StudentRegisterInput } from "@/types/student"
 
-interface StudentFormDataProp {
-  name: string
-  phoneNo: string
-  gender: 'Male' | 'Female' | 'Prefer Not to Say' | ''
-  rollNo: string
-  regNo: string
-  section: string
-  admissionType: string
-  admissionDate: string
-  parentName: string
-  parentPhoneNo: string
-  isHosteller: boolean
-  isActive: boolean
-  email: string
-  department: string
-  Semester: string
+// export interface StudentFormDataProp {
+//   name: string
+//   phoneNo: string
+//   gender: 'Male' | 'Female' | 'Prefer Not to Say' | ''
+//   rollNo: string
+//   regNo: string
+//   section: string
+//   admissionType: string
+//   admissionDate: string
+//   parentName: string
+//   parentPhoneNo: string
+//   isHosteller: boolean
+//   isActive: boolean
+//   email: string
+//   department: string
+//   semester: string
+// }
+function mapFormToPayload(
+  form: StudentFormData
+): StudentRegisterInput {
+  return {
+    email: form.email,
+    password: form.password,
+    name: form.name,
+    phoneNo: form.phoneNo,
+    parentName: form.parentName,
+    parentPhoneNo: form.parentPhoneNo,
+    rollNo: form.rollNo,
+    regNo: form.regNo,
+    gender: form.gender as "MALE" | "FEMALE" | "TRANSGENDER",
+    hosteller: form.hosteller,
+    admissionType: form.admissionType as "REGULAR" | "LATERAL_ENTRY",
+    admissionDate: new Date(form.admissionDate),
+    deptId: form.deptId,
+    semId: form.semId,
+    batchId: form.batchId,
+  }
 }
 
 export function AdminStudentPage() {
-  const initialFormState: StudentFormDataProp = {
-    name: '',
-    phoneNo: '',
-    gender: '',
-    rollNo: '',
-    regNo: '',
-    section: '',
-    admissionType: '',
-    admissionDate: '',
-    parentName: '',
-    parentPhoneNo: '',
-    isHosteller: false,
-    isActive: true,
-    email: '',
-    department: '',
-    Semester: '',
-  }
+const initialFormState: StudentFormData = {
+  email: "",
+  password: "",
+  rollNo: "",
+  regNo: "",
+  name: "",
+  parentName: "",
+  parentPhoneNo: "",
+  phoneNo: "",
+  gender: "",
+  hosteller: false,
+  admissionDate: "",
+  admissionType: "",
+  deptId: 0,
+  semId: 0,
+  batchId: 0,
+};
 
   const [formData, setFormData] = useState(initialFormState)
   const [loading, setLoading] = useState(false)
-  const [errors, setErrors] = useState<Partial<Record<keyof StudentFormDataProp, string>>>({})
+  const [success, setSuccess] = useState(false)
+  const [errors, setErrors] = useState<Partial<Record<keyof StudentFormData, string>>>({})
 
   //function for Vlaidation of the from feilds
   function validateForm(): boolean {
-    const newErrors: Partial<Record<keyof StudentFormDataProp, string>> = {}
+    const newErrors: Partial<Record<keyof StudentFormData, string>> = {}
 
     if (!formData.name.trim()) {
       newErrors.name = 'Full Name is required'
@@ -67,11 +91,11 @@ export function AdminStudentPage() {
     if (!formData.regNo.trim()) {
       newErrors.regNo = 'Registration Number is required'
     }
-    if (!formData.section) {
-      newErrors.section = 'Section is required'
-    }
-    if (!formData.department) {
-      newErrors.department = 'Department is required'
+    // if (!formData.section) {
+    //   newErrors.section = 'Section is required'
+    // }
+    if (formData.deptId === 0) {
+      newErrors.deptId = 'Department is required'
     }
     if (!formData.admissionType) {
       newErrors.admissionType = 'Admission Type is required'
@@ -85,41 +109,94 @@ export function AdminStudentPage() {
     if (!formData.parentPhoneNo.trim()) {
       newErrors.parentPhoneNo = 'Parent Phone is required'
     }
+    if (formData.semId === 0) {
+    newErrors.semId = 'Semester is required'
+    }
+
+    if (formData.batchId === 0) {
+      newErrors.batchId = 'Batch is required'
+    }
+
+    if (!formData.password.trim()) {
+      newErrors.password = 'Password is required'
+    }
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
   // for handle change in form
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
-    const target = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [target.name]:
-        target.type === 'checkbox' ? (target as HTMLInputElement).checked : target.value,
-    }))
-  }
+  function handleChange(
+  e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+) {
+  const { name, value, type } = e.target
+
+  setFormData((prev) => ({
+    ...prev,
+    [name]:
+      name === "deptId" ||
+      name === "semId" ||
+      name === "batchId"
+        ? Number(value)
+        : type === "checkbox"
+        ? (e.target as HTMLInputElement).checked
+        : value,
+  }))
+}
 
   // for handle the form summit
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    const isValid = validateForm()
+  // async function handleSubmit(e: React.FormEvent) {
+  //   e.preventDefault()
 
-    if (!isValid) {
-      return
-    }
+  //   const isValid = validateForm()
+  //   if (!isValid) return
 
-    try {
-      setLoading(true)
-      console.log('Submitting:', formData)
-      // await for create student
-      setFormData(initialFormState) // reset only after the submiting
-    } catch (error) {
-      console.error('Submission failed', error)
-    } finally {
-      setLoading(false)
-    }
+  //   try {
+  //     setLoading(true)
+
+  //     const data = await registerSingleStudent(formData)
+
+  //     console.log("Student registered:", data)
+
+  //     setFormData(initialFormState)
+
+  //   } catch (error: any) {
+  //     console.error("Submission failed:", error.response?.data || error.message)
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
+
+async function handleSubmit(e: React.FormEvent) {
+  e.preventDefault()
+
+  if (!validateForm()) return
+
+  try {
+    setLoading(true)
+    setSuccess(false)
+
+    const payload = mapFormToPayload(formData)
+
+    console.log("Sending Payload:", payload)
+
+    await registerSingleStudent(payload)
+
+    console.log("Student registered successfully")
+
+    setSuccess(true)
+    setFormData(initialFormState)
+
+    setTimeout(() => {
+      setSuccess(false)
+    }, 4000);
+
+  } catch (error: any) {
+    console.error("Submission failed:", error.response?.data)
+    setSuccess(false)
+  } finally {
+    setLoading(false)
   }
-
+}
   // Function To handle Reset Button
   function handleResetFrom() {
     setFormData(initialFormState)
@@ -207,9 +284,9 @@ export function AdminStudentPage() {
                   value={formData.phoneNo}
                   onChange={handleChange}
                   className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none 
-                  ${errors.name ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+                  ${errors.phoneNo ? 'border-red-500' : 'border-[#E2E8F0]'}`}
                 />
-                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                {errors.phoneNo && <p>{errors.phoneNo}</p>}
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-[#334155]">
@@ -223,9 +300,9 @@ export function AdminStudentPage() {
                   value={formData.email}
                   onChange={handleChange}
                   className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none 
-                  ${errors.name ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+                  ${errors.email ? 'border-red-500' : 'border-[#E2E8F0]'}`}
                 />
-                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                {errors.email && <p>{errors.email}</p>}
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-[#334155]">
@@ -237,14 +314,45 @@ export function AdminStudentPage() {
                   value={formData.gender}
                   onChange={handleChange}
                   className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none 
-                  ${errors.name ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+                  ${errors.gender ? 'border-red-500' : 'border-[#E2E8F0]'}`}
                 >
                   <option value="">Select Gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Prefer Not to Say">Prefer Not to Say</option>
+                  <option value="MALE">Male</option>
+                  <option value="FEMALE">Female</option>
+                  <option value="TRANSGENDER">Transgender</option>
                 </select>
-                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                {errors.gender && <p>{errors.gender}</p>}
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-[#334155]">
+                  Batch Id <span className="text-red-400">*</span>
+                </label>
+                <select
+                  id="batchId"
+                  name="batchId"
+                  value={formData.batchId}
+                  onChange={handleChange}
+                  className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none 
+                  ${errors.batchId ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+                >
+                  <option value="0">Select Batch</option>
+                  <option value="1">2023-2027</option>
+                  <option value="1">2024-2028</option>
+                </select>
+                {errors.batchId && <p>{errors.batchId}</p>}
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-[#334155]">Password <span className="text-red-400">*</span></label>
+                <input
+                  name="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none
+                  ${errors.password ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+                />
+                {errors.password && <p>{errors.password}</p>}
               </div>
             </div>
 
@@ -268,9 +376,9 @@ export function AdminStudentPage() {
                   value={formData.rollNo}
                   onChange={handleChange}
                   className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none 
-                  ${errors.name ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+                  ${errors.rollNo ? 'border-red-500' : 'border-[#E2E8F0]'}`}
                 />
-                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                {errors.rollNo && <p>{errors.rollNo}</p>}
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-[#334155]">
@@ -284,49 +392,54 @@ export function AdminStudentPage() {
                   value={formData.regNo}
                   onChange={handleChange}
                   className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none 
-                  ${errors.name ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+                  ${errors.regNo ? 'border-red-500' : 'border-[#E2E8F0]'}`}
                 />
-                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                {errors.regNo && <p>{errors.regNo}</p>}
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-[#334155]">
-                  Section <span className="text-red-400">*</span>
+                  Sem Id <span className="text-red-400">*</span>
                 </label>
                 <select
-                  id="section"
-                  name="section"
-                  value={formData.section}
+                  id="semId"
+                  name="semId"
+                  value={formData.semId}
                   onChange={handleChange}
                   className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none 
-                  ${errors.name ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+                  ${errors.semId ? 'border-red-500' : 'border-[#E2E8F0]'}`}
                 >
-                  <option value="">Select Section</option>
-                  <option value="A">A</option>
-                  <option value="B">B</option>
+                  <option value="0">Select Semester</option>
+                  <option value="1">Semester 1</option>
+                  <option value="2">Semester 2</option>
+                  <option value="1">Semester 3</option>
+                  <option value="2">Semester 4</option>
+                  <option value="1">Semester 5</option>
+                  <option value="2">Semester 6</option>
+                  <option value="1">Semester 7</option>
+                  <option value="2">Semester 8</option>
                 </select>
-                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                {errors.semId && <p>{errors.semId}</p>}
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-[#334155]">
                   Department <span className="text-red-400">*</span>
                 </label>
                 <select
-                  id="department"
-                  name="department"
-                  value={formData.department}
+                  id="deptId"
+                  name="deptId"
+                  value={formData.deptId}
                   onChange={handleChange}
                   className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none 
-                  ${errors.name ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+                  ${errors.deptId ? 'border-red-500' : 'border-[#E2E8F0]'}`}
                 >
-                  <option value="">Select Department</option>
-                  <option value="CSE">Computer Science Engineering (CSE)</option>
-                  <option value="ECE">Electronics & Communication Engineering (ECE)</option>
-                  <option value="EE">Electrical Engineering (EE)</option>
-                  <option value="ME">Mechanical Engineering (ME)</option>
-                  <option value="CE">Civil Engineering (CE)</option>
-                  <option value="MECH">Mechatronics Engineering (MECH)</option>
+                  <option value="0">Select Department</option>
+                  <option value="1">105 (CSE)</option>
+                  <option value="104">104 (ECE)</option>
+                  <option value="101">101 (EE)</option>
+                  <option value="102">102 (ME)</option>
+                  <option value="103">103 (CE)</option>
                 </select>
-                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                {errors.deptId && <p>{errors.deptId}</p>}
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-[#334155]">
@@ -338,13 +451,13 @@ export function AdminStudentPage() {
                   value={formData.admissionType}
                   onChange={handleChange}
                   className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none 
-                  ${errors.name ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+                  ${errors.admissionType ? 'border-red-500' : 'border-[#E2E8F0]'}`}
                 >
-                  <option value="">Quata</option>
-                  <option value="Regular">Regular</option>
-                  <option value="Lateral">Lateral</option>
+                  <option value="">Select Admission Type</option>
+                  <option value="REGULAR">Regular</option>
+                  <option value="LATERAL_ENTRY">Lateral Entry</option>
                 </select>
-                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                {errors.admissionType && <p>{errors.admissionType}</p>}
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-[#334155]">
@@ -357,9 +470,9 @@ export function AdminStudentPage() {
                   value={formData.admissionDate}
                   onChange={handleChange}
                   className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none 
-                  ${errors.name ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+                  ${errors.admissionDate ? 'border-red-500' : 'border-[#E2E8F0]'}`}
                 />
-                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                {errors.admissionDate && <p>{errors.admissionDate}</p>}
               </div>
             </div>
 
@@ -383,9 +496,9 @@ export function AdminStudentPage() {
                   value={formData.parentName}
                   onChange={handleChange}
                   className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none 
-                  ${errors.name ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+                  ${errors.parentName ? 'border-red-500' : 'border-[#E2E8F0]'}`}
                 />
-                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                {errors.parentName && <p>{errors.parentName}</p>}
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-[#334155]">
@@ -399,9 +512,9 @@ export function AdminStudentPage() {
                   value={formData.parentPhoneNo}
                   onChange={handleChange}
                   className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none 
-                  ${errors.name ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+                  ${errors.parentPhoneNo ? 'border-red-500' : 'border-[#E2E8F0]'}`}
                 />
-                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                {errors.parentPhoneNo && <p>{errors.parentPhoneNo}</p>}
               </div>
             </div>
 
@@ -414,38 +527,52 @@ export function AdminStudentPage() {
             </div>
             <div className="grid grid-cols-2 gap-6 mt-3">
               <ToggleCard
-                label="Hosteller"
+                label="hosteller"
                 description="Is the student staying in the hostel?"
-                checked={formData.isHosteller}
+                checked={formData.hosteller}
                 icon={Bed}
                 onChange={(value) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    isHosteller: value,
-                  }))
-                }
+                setFormData((prev) => ({
+                  ...prev,
+                  hosteller: value,
+                }))
+              }
               />
-              <ToggleCard
+              {/* <ToggleCard
                 label="Status Active"
                 description="Is the student currently active?"
                 icon={ShieldCheck}
-                checked={formData.isActive}
+                checked={}
                 onChange={(value) =>
                   setFormData((prev) => ({
                     ...prev,
                     isActive: value,
                   }))
                 }
-              />
+              /> */}
             </div>
 
-            <div className="space-y-2 mt-5 flex justify-end ">
+            <div className="space-y-2 mt-5 flex justify-end">
               <button
                 type="submit"
                 disabled={loading}
-                className="px-10 py-3 bg-[#0B3D93] text-white text-sm rounded-2xl flex items-center gap-3 cursor-pointer"
+                className={`
+                  px-10 py-3 text-white text-sm rounded-2xl flex items-center gap-3 
+                  transition-all duration-300 ease-in-out
+                  ${success ? "bg-green-600" : "bg-[#0B3D93]"}
+                  ${loading ? "opacity-70 cursor-not-allowed" : ""}
+                `}
               >
-                <Check size={19} /> {loading ? 'Submitting...' : 'Register Student'}
+                {loading ? (
+                  "Submitting..."
+                ) : success ? (
+                  <>
+                    <CheckCircle size={20} className="animate-scaleIn" />
+                    Registered Successfully
+                  </>
+                ) : (
+                  "Register Student"
+                )}
               </button>
             </div>
           </div>
