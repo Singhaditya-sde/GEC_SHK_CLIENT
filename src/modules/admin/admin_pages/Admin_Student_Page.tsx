@@ -538,18 +538,6 @@ async function handleSubmit(e: React.FormEvent) {
                 }))
               }
               />
-              {/* <ToggleCard
-                label="Status Active"
-                description="Is the student currently active?"
-                icon={ShieldCheck}
-                checked={}
-                onChange={(value) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    isActive: value,
-                  }))
-                }
-              /> */}
             </div>
 
             <div className="space-y-2 mt-5 flex justify-end">
@@ -558,7 +546,7 @@ async function handleSubmit(e: React.FormEvent) {
                 disabled={loading}
                 className={`
                   px-10 py-3 text-white text-sm rounded-2xl flex items-center gap-3 
-                  transition-all duration-300 ease-in-out
+                  transition-all duration-300 ease-in-out cursor-pointer
                   ${success ? "bg-green-600" : "bg-[#0B3D93]"}
                   ${loading ? "opacity-70 cursor-not-allowed" : ""}
                 `}
@@ -567,6 +555,7 @@ async function handleSubmit(e: React.FormEvent) {
                   "Submitting..."
                 ) : success ? (
                   <>
+                    
                     <CheckCircle size={20} className="animate-scaleIn" />
                     Registered Successfully
                   </>
