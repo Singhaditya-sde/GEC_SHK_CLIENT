@@ -1,7 +1,7 @@
 export function AdminAddFacultyPage() {
   return (
     <div>
-      <h1>hii</h1>
+      <h2>Initialize the Add Fculty for adding the faculty for the admins</h2>
     </div>
   )
 }

@@ -91,9 +91,7 @@ const initialFormState: StudentFormData = {
     if (!formData.regNo.trim()) {
       newErrors.regNo = 'Registration Number is required'
     }
-    // if (!formData.section) {
-    //   newErrors.section = 'Section is required'
-    // }
+
     if (formData.deptId === 0) {
       newErrors.deptId = 'Department is required'
     }
@@ -143,28 +141,6 @@ const initialFormState: StudentFormData = {
   }))
 }
 
-  // for handle the form summit
-  // async function handleSubmit(e: React.FormEvent) {
-  //   e.preventDefault()
-
-  //   const isValid = validateForm()
-  //   if (!isValid) return
-
-  //   try {
-  //     setLoading(true)
-
-  //     const data = await registerSingleStudent(formData)
-
-  //     console.log("Student registered:", data)
-
-  //     setFormData(initialFormState)
-
-  //   } catch (error: any) {
-  //     console.error("Submission failed:", error.response?.data || error.message)
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }
 
 async function handleSubmit(e: React.FormEvent) {
   e.preventDefault()
