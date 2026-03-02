@@ -1,5 +1,4 @@
 import { Settings, BellRing } from 'lucide-react'
-// import { useMemo } from "react";
 import { useLocation } from 'react-router'
 
 export function Admin_TopBar() {
@@ -14,10 +13,6 @@ export function Admin_TopBar() {
     '/admin/directory': 'Student Directory',
     '/admin/students/bulk-upload': 'Bulk Student',
   }
-
-  // const title = useMemo(() => {
-  //   return routeTitleMap[location.pathname] || "Dashboard";
-  // },[])
 
   const title = routeTitleMap[location.pathname] || 'Dashboard'
 
