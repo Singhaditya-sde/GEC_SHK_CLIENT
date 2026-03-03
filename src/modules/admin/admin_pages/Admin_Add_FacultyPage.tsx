@@ -1,7 +1,15 @@
 export function AdminAddFacultyPage() {
   return (
     <div>
-      <h2>Initialize the Add Fculty for adding the faculty for the admins</h2>
+      <form>
+        <div>
+          <label>Add faculty</label>
+          <input 
+            type="text"
+            placeholder="Enter the Faculty name"
+          />
+        </div>
+      </form>
     </div>
   )
 }
