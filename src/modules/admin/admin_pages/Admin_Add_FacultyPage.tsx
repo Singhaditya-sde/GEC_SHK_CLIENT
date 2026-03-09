@@ -6,7 +6,7 @@ export function AdminAddFacultyPage() {
   name: "",
   phoneNo: "",
   regNo: "",
-  deptId: "",
+  deptId: 0,
   isHOD: false
   });
 
