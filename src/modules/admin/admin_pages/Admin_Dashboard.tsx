@@ -57,7 +57,7 @@ export function AdminDashboard() {
             <div className="px-5 pt-5">
               <button
                 onClick={handleGenerateRes}
-                className="text-white font-medium text-sm bg-[#0B3D93] px-4 py-2 rounded-lg flex gap-2 cursor-pointer"
+                className="px-10 py-3 bg-[#0B3D93] text-white rounded-2xl text-sm flex items-center gap-3 cursor-pointer"
               >
                 <Download size={18} />
                 Genrate Response

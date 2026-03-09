@@ -45,6 +45,7 @@ export function AdminBulkUploadPage() {
   const [file, setFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState(0)
+  const sampleCsvUrl = import.meta.env.VITE_SAMPLE_CSV_URL;
 
   function handleFileSelect(files: FileList | null) {
     if (!files || files.length === 0) return
@@ -185,7 +186,9 @@ export function AdminBulkUploadPage() {
 
             {/* downloading and uploading button */}
             <div className="mt-6 flex flex-col gap-4">
-              <button className="px-5 py-3 text-[#0B3D93] border text-sm font-medium rounded-xl flex justify-center items-center gap-3 cursor-pointer">
+              <button 
+              onClick= {() => window.open(sampleCsvUrl)}
+              className="px-5 py-3 text-[#0B3D93] border text-sm font-medium rounded-xl flex justify-center items-center gap-3 cursor-pointer">
                 <Download size={16} />
                 Download Sample CSV Format
               </button>
