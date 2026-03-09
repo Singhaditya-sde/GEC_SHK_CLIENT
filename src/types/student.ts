@@ -36,3 +36,26 @@ export type StudentRegisterInput = {
   semId: number
   batchId: number
 }
+
+// This is for the Student Directory
+export interface StudentDirectoryProp {
+  id: number;
+  name: string;
+  phoneNo: string;
+  parentName: string;
+  parentPhoneNo: string;
+  rollNo: string;
+  regNo: string;
+  section: string;
+  gender: "MALE" | "FEMALE";
+  hosteller: boolean;
+  admissionType: "REGULAR" | "LATERAL";
+  admissionDate: string;
+  createdAt: string;
+  updatedAt: string;
+  isActive: boolean;
+  userId: number;
+  deptId: number;
+  semId: number;
+  batchId: number;
+}
