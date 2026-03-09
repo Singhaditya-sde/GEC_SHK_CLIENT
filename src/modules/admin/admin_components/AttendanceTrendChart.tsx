@@ -24,7 +24,7 @@ const data: ChartData[] = [
 
 export function AttendanceTrendChart() {
   return (
-    <div className="w-full h-96  bg-white py-6 rounded-xl shadow-sm flex flex-col">
+    <div className="w-full h-96 lg:h-[500px]  bg-white py-6 rounded-xl shadow-sm flex flex-col">
       {/* Header part is here  */}
       <div className="flex justify-between items-center px-5 pb-4">
         <div>
