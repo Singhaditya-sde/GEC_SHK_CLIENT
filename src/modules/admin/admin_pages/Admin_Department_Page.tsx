@@ -5,7 +5,7 @@ export function AdminDepartmentPage() {
         <div>
           <h1 className="text-2xl font-semibold pt-5 text-[#0F172A]">Department Overview</h1>
           <p className="text-sm text-[#64748B]">
-            Manage academic departments and view performance metrics.
+            Manage academic departments and view performance metrics for Admin.
           </p>
         </div>
       </div>
