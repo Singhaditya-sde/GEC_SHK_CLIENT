@@ -1,5 +1,7 @@
 import './index.css'
+import { useEffect } from 'react'
 import { Routes, Route, Navigate } from 'react-router'
+import { Loader2 } from 'lucide-react'
 import { ProtectedRoute } from './routes/ProtectedRoute'
 import { AdminLayout } from './Layout/AminLayout'
 import { AdminDashboard } from './modules/admin/admin_pages/Admin_Dashboard'
@@ -11,18 +13,51 @@ import { StudentDirectory } from './components/Students/StudentDirectory'
 import { AdminAddFacultyPage } from './modules/admin/admin_pages/Admin_Add_FacultyPage'
 import { LoginPage } from './modules/login/Login_Page'
 import { useAuthStore } from './store/authStore'
+import { Spinner } from './components/common/Spinner'
 
 function App() {
 
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const user = useAuthStore((state) => state.user)
+
+  const checkAuth = useAuthStore((state) => state.checkAuth)
+
+  const isCheckingAuth = useAuthStore((state) => state.isCheckingAuth)
+
+  useEffect(() => {
+    checkAuth()
+  },[checkAuth])
+
+  if (isCheckingAuth) {
+  return (
+    <div className="h-screen flex items-center justify-center">
+      <Spinner size={32} />
+    </div>
+  )
+}
 
   const RootRedirect = () => {
-    return isAuthenticated
-      ? <Navigate to="/admin/dashboard" replace />
-      : <Navigate to="/login" replace />
+    
+    if(!user) {
+      return <Navigate to='/login' replace />
+    }
+
+    if(user.role === 'ADMIN') {
+      return <Navigate to='/admin/dashboard' replace />
+    }
+
+    if(user.role === 'FACULTY') {
+      return <Navigate to='/faculty/dashboard' replace />
+    }
+
+    if (user.role === "STUDENT") {
+      return <Navigate to={`/student/dashboard/${user.id}`} replace />
+    }
+
+    return <Navigate to="/login" replace />
   };
 
   return (
+    
     <Routes>
       <Route path="/" element={<RootRedirect />} />
       <Route path="/login" element={<LoginPage />} />
