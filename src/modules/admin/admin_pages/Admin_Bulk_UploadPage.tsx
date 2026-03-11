@@ -45,15 +45,15 @@ export function AdminBulkUploadPage() {
   const [file, setFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState(0)
-  const sampleCsvUrl = import.meta.env.VITE_SAMPLE_CSV_URL;
+  const sampleXLSXUrl = import.meta.env.VITE_SAMPLE_XLSX_URL;
 
   function handleFileSelect(files: FileList | null) {
     if (!files || files.length === 0) return
 
     const selected = files[0]
 
-    if (!selected.name.endsWith('.csv')) {
-      alert('Only CSV files are supported.')
+    if (!selected.name.endsWith('.xlsx')) {
+      alert('Only XLSX files are supported.')
       return
     }
 
@@ -105,7 +105,7 @@ export function AdminBulkUploadPage() {
       <div className="p-5">
         <h1 className="text-2xl font-semibold text-[#0F172A]">Bulk Student Upload</h1>
         <p className="text-sm text-[#64748B]">
-          Efficiently register multiple students by uploading a standardized CSV file.
+          Efficiently register multiple students by uploading a standardized XLSX file.
         </p>
       </div>
 
@@ -121,9 +121,9 @@ export function AdminBulkUploadPage() {
               <UploadCloud size={28} className="text-[#0F172A]" />
             </div>
 
-            <p className="font-semibold text-lg text-[#0F172A]">Drag and drop your CSV file here</p>
+            <p className="font-semibold text-lg text-[#0F172A]">Drag and drop your XLSX file here</p>
 
-            <p className="text-sm text-slate-500 mt-1">Only .csv files are supported (Max 10MB)</p>
+            <p className="text-sm text-slate-500 mt-1">Only .xlsx files are supported (Max 10MB)</p>
 
             <button
               type="button"
@@ -135,7 +135,7 @@ export function AdminBulkUploadPage() {
 
             <input
               type="file"
-              accept=".csv"
+              accept=".xlsx"
               ref={inputRef}
               onChange={(e) => handleFileSelect(e.target.files)}
               className="hidden"
@@ -187,10 +187,10 @@ export function AdminBulkUploadPage() {
             {/* downloading and uploading button */}
             <div className="mt-6 flex flex-col gap-4">
               <button 
-              onClick= {() => window.open(sampleCsvUrl)}
+              onClick= {() => window.open(sampleXLSXUrl)}
               className="px-5 py-3 text-[#0B3D93] border text-sm font-medium rounded-xl flex justify-center items-center gap-3 cursor-pointer">
                 <Download size={16} />
-                Download Sample CSV Format
+                Download Sample XLSX Format
               </button>
 
               <button

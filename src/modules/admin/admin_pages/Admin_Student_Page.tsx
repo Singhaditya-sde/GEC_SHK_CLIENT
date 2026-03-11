@@ -5,30 +5,14 @@ import { Bed, RotateCcw, Rocket , CheckCircle } from 'lucide-react'
 import { Link } from 'react-router'
 import { registerSingleStudent } from '../../../services/student'
 import type { StudentFormData, StudentRegisterInput } from "@/types/student"
+import { Spinner } from '@/components/common/Spinner'
 
-// export interface StudentFormDataProp {
-//   name: string
-//   phoneNo: string
-//   gender: 'Male' | 'Female' | 'Prefer Not to Say' | ''
-//   rollNo: string
-//   regNo: string
-//   section: string
-//   admissionType: string
-//   admissionDate: string
-//   parentName: string
-//   parentPhoneNo: string
-//   isHosteller: boolean
-//   isActive: boolean
-//   email: string
-//   department: string
-//   semester: string
-// }
+
 function mapFormToPayload(
   form: StudentFormData
 ): StudentRegisterInput {
   return {
     email: form.email,
-    password: form.password,
     name: form.name,
     phoneNo: form.phoneNo,
     parentName: form.parentName,
@@ -48,7 +32,6 @@ function mapFormToPayload(
 export function AdminStudentPage() {
 const initialFormState: StudentFormData = {
   email: "",
-  password: "",
   rollNo: "",
   regNo: "",
   name: "",
@@ -68,6 +51,7 @@ const initialFormState: StudentFormData = {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [errors, setErrors] = useState<Partial<Record<keyof StudentFormData, string>>>({})
+
 
   //function for Vlaidation of the from feilds
   function validateForm(): boolean {
@@ -114,10 +98,6 @@ const initialFormState: StudentFormData = {
     if (formData.batchId === 0) {
       newErrors.batchId = 'Batch is required'
     }
-
-    if (!formData.password.trim()) {
-      newErrors.password = 'Password is required'
-    }
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -139,6 +119,11 @@ const initialFormState: StudentFormData = {
         ? (e.target as HTMLInputElement).checked
         : value,
   }))
+
+  setErrors(prev => ({
+    ...prev,
+    [name]: ""
+  }))
 }
 
 
@@ -150,6 +135,7 @@ async function handleSubmit(e: React.FormEvent) {
   try {
     setLoading(true)
     setSuccess(false)
+    setErrors({})
 
     const payload = mapFormToPayload(formData)
 
@@ -166,12 +152,28 @@ async function handleSubmit(e: React.FormEvent) {
       setSuccess(false)
     }, 4000);
 
-  } catch (error: any) {
-    console.error("Submission failed:", error.response?.data)
-    setSuccess(false)
-  } finally {
-    setLoading(false)
+  } catch (err: any) {
+
+  const message = err.response?.data?.message
+
+  if (message === "email already exists") {
+    setErrors(prev => ({
+      ...prev,
+      email: "Email already exists"
+    }))
   }
+
+  else if (message === "student data already exists") {
+    setErrors(prev => ({
+      ...prev,
+      rollNo: "Roll number already exists",
+      regNo: "Registration number already exists"
+    }))
+  }
+
+} finally {
+  setLoading(false)
+}
 }
   // Function To handle Reset Button
   function handleResetFrom() {
@@ -278,7 +280,7 @@ async function handleSubmit(e: React.FormEvent) {
                   className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none 
                   ${errors.email ? 'border-red-500' : 'border-[#E2E8F0]'}`}
                 />
-                {errors.email && <p>{errors.email}</p>}
+                {errors.email && <p className='text-red-500 text-sm mt-1'>{errors.email}</p>}
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-[#334155]">
@@ -289,8 +291,9 @@ async function handleSubmit(e: React.FormEvent) {
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
-                  className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none 
-                  ${errors.gender ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+                  className={`w-full border bg-[#F8FAFC] rounded-xl px-3 py-2 text-md 
+                    focus:ring-2 focus:ring-indigo-500 outline-none appearance-none
+                    ${errors.gender ? 'border-red-500' : 'border-[#E2E8F0]'}`}
                 >
                   <option value="">Select Gender</option>
                   <option value="MALE">Male</option>
@@ -309,8 +312,9 @@ async function handleSubmit(e: React.FormEvent) {
                   name="batchId"
                   value={formData.batchId}
                   onChange={handleChange}
-                  className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none 
-                  ${errors.batchId ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+                  className={`w-full border bg-[#F8FAFC] rounded-xl px-3 py-2 text-md 
+                    focus:ring-2 focus:ring-indigo-500 outline-none appearance-none
+                    ${errors.batchId ? 'border-red-500' : 'border-[#E2E8F0]'}`}
                 >
                   <option value="0">Select Batch</option>
                   <option value="1">2023-2027</option>
@@ -318,7 +322,7 @@ async function handleSubmit(e: React.FormEvent) {
                 </select>
                 {errors.batchId && <p>{errors.batchId}</p>}
               </div>
-              <div className="flex flex-col gap-1.5">
+              {/* <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-[#334155]">Password <span className="text-red-400">*</span></label>
                 <input
                   name="password"
@@ -329,7 +333,7 @@ async function handleSubmit(e: React.FormEvent) {
                   ${errors.password ? 'border-red-500' : 'border-[#E2E8F0]'}`}
                 />
                 {errors.password && <p>{errors.password}</p>}
-              </div>
+              </div> */}
             </div>
 
             <div className="space-y-2 mt-5">
@@ -354,7 +358,7 @@ async function handleSubmit(e: React.FormEvent) {
                   className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none 
                   ${errors.rollNo ? 'border-red-500' : 'border-[#E2E8F0]'}`}
                 />
-                {errors.rollNo && <p>{errors.rollNo}</p>}
+                {errors.rollNo && <p className="text-red-500 text-xs mt-1">{errors.rollNo}</p>}
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-[#334155]">
@@ -370,7 +374,7 @@ async function handleSubmit(e: React.FormEvent) {
                   className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none 
                   ${errors.regNo ? 'border-red-500' : 'border-[#E2E8F0]'}`}
                 />
-                {errors.regNo && <p>{errors.regNo}</p>}
+                {errors.regNo && <p className="text-red-500 text-xs mt-1">{errors.regNo}</p>}
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-[#334155]">
@@ -381,8 +385,9 @@ async function handleSubmit(e: React.FormEvent) {
                   name="semId"
                   value={formData.semId}
                   onChange={handleChange}
-                  className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none 
-                  ${errors.semId ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+                  className={`w-full border bg-[#F8FAFC] rounded-xl px-3 py-2 text-md 
+                    focus:ring-2 focus:ring-indigo-500 outline-none appearance-none
+                    ${errors.semId ? 'border-red-500' : 'border-[#E2E8F0]'}`}
                 >
                   <option value="0">Select Semester</option>
                   <option value="1">Semester 1</option>
@@ -405,8 +410,9 @@ async function handleSubmit(e: React.FormEvent) {
                   name="deptId"
                   value={formData.deptId}
                   onChange={handleChange}
-                  className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none 
-                  ${errors.deptId ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+                  className={`w-full border bg-[#F8FAFC] rounded-xl px-3 py-2 text-md 
+                    focus:ring-2 focus:ring-indigo-500 outline-none appearance-none
+                    ${errors.deptId ? 'border-red-500' : 'border-[#E2E8F0]'}`}
                 >
                   <option value="0">Select Department</option>
                   <option value="1">105 (CSE)</option>
@@ -426,8 +432,9 @@ async function handleSubmit(e: React.FormEvent) {
                   name="admissionType"
                   value={formData.admissionType}
                   onChange={handleChange}
-                  className={`border bg-[#F8FAFC] rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none 
-                  ${errors.admissionType ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+                  className={`w-full border bg-[#F8FAFC] rounded-xl px-3 py-2 text-md 
+                    focus:ring-2 focus:ring-indigo-500 outline-none appearance-none
+                    ${errors.admissionType ? 'border-red-500' : 'border-[#E2E8F0]'}`}
                 >
                   <option value="">Select Admission Type</option>
                   <option value="REGULAR">Regular</option>
@@ -528,7 +535,10 @@ async function handleSubmit(e: React.FormEvent) {
                 `}
               >
                 {loading ? (
-                  "Submitting..."
+                  <>
+                    <Spinner />
+                    "Submitting..."
+                  </>
                 ) : success ? (
                   <>
                     
