@@ -4,8 +4,16 @@ import { GraduationCap } from 'lucide-react'
 import { useAuthStore } from '../../store/authStore'
 import api from '../../services/api'
 import { useNavigate } from 'react-router'
+import type { User } from '../../store/authStore'
+import { Loader2 } from 'lucide-react'
+import { Spinner } from '@/components/common/Spinner'
+
+interface LoginResponse {
+  data: User
+}
 
 export const LoginPage = () => {
+
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
@@ -14,38 +22,45 @@ export const LoginPage = () => {
   const login = useAuthStore((state) => state.login)
   const navigate = useNavigate()
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
 
-    try {
-      setLoading(true)
-      setError("")
+  try {
+    setLoading(true)
+    setError("")
 
-      const res = await api.post("/api/auth/login", {
-        email,
-        password,
-      })
+    const res = await api.post<LoginResponse>("/api/auth/login", {
+      email,
+      password,
+    })
 
-      // ✅ Your backend returns: res.data.data.user
-      const user = res.data.data.user
+    const user: User = res.data.data
 
-      // ✅ Correct login call
-      login(user)
+    login(user)
 
-      if (user.role === "ADMIN") {
-        navigate("/admin/dashboard")
-      } else if (user.role === "FACULTY") {
-        navigate("/faculty/dashboard")
-      } else {
-        navigate("/student/dashboard")
-      }
-
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Login failed")
-    } finally {
-      setLoading(false)
+    const dashboardRoutes = {
+      ADMIN: "/admin/dashboard",
+      FACULTY: "/faculty/dashboard",
+      STUDENT: "/student/dashboard",
     }
+
+    const route = dashboardRoutes[user.role]
+
+    if (!route) {
+      throw new Error("Invalid user role")
+    }
+
+    navigate(route)
+
+  } catch (err: any) {
+    console.log(err)
+    console.log(err.response)
+
+    setError(err.response?.data?.message || "Login failed")
+  } finally {
+    setLoading(false)
   }
+}
 
   return (
     <div className='max-w-[1500px] mx-auto w-full h-screen bg-slate-300'>
@@ -88,6 +103,7 @@ export const LoginPage = () => {
               type='email'
               required
               value={email}
+              disabled={loading}
               onChange={(e) => setEmail(e.target.value)}
               placeholder='Enter Your Email'
               className='bg-[#F8FAFC] p-3 rounded-xl'
@@ -101,6 +117,7 @@ export const LoginPage = () => {
               type='password'
               required
               value={password}
+              disabled={loading}
               onChange={(e) => setPassword(e.target.value)}
               placeholder='Password'
               className='bg-[#F8FAFC] p-3 rounded-xl'
@@ -119,9 +136,16 @@ export const LoginPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="bg-blue-900 p-3 rounded-xl text-white disabled:opacity-60"
+              className="bg-blue-900 p-3 rounded-xl text-white flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
             >
-              {loading ? "Signing In..." : "Sign In"}
+              {loading ? (
+                <>
+                  <Spinner />
+                  <span>Signing In...</span>
+                </>
+              ) : (
+                "Sign In"
+              )}
             </button>
           </div>
 
