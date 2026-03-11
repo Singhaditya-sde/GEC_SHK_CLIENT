@@ -1,7 +1,6 @@
 // Used for FORM STATE (UI layer)
 export interface StudentFormData {
   email: string
-  password: string
   rollNo: string
   regNo: string
   name: string
@@ -21,7 +20,6 @@ export interface StudentFormData {
 // Used for BACKEND REQUEST (API layer)
 export type StudentRegisterInput = {
   email: string
-  password: string
   name: string
   phoneNo: string
   parentName: string
