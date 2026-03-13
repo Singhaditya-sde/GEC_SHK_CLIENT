@@ -5,7 +5,6 @@ import { useAuthStore } from '../../store/authStore'
 import api from '../../services/api'
 import { useNavigate } from 'react-router'
 import type { User } from '../../store/authStore'
-import { Loader2 } from 'lucide-react'
 import { Spinner } from '@/components/common/Spinner'
 
 interface LoginResponse {

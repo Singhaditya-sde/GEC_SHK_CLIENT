@@ -1,7 +1,6 @@
 import './index.css'
 import { useEffect } from 'react'
 import { Routes, Route, Navigate } from 'react-router'
-import { Loader2 } from 'lucide-react'
 import { ProtectedRoute } from './routes/ProtectedRoute'
 import { AdminLayout } from './Layout/AminLayout'
 import { AdminDashboard } from './modules/admin/admin_pages/Admin_Dashboard'
@@ -36,31 +35,30 @@ function App() {
 }
 
   const RootRedirect = () => {
-    
-    if(!user) {
-      return <Navigate to='/login' replace />
-    }
 
-    if(user.role === 'ADMIN') {
-      return <Navigate to='/admin/dashboard' replace />
-    }
+  if (!user) {
+    return <LoginPage />
+  }
 
-    if(user.role === 'FACULTY') {
-      return <Navigate to='/faculty/dashboard' replace />
-    }
+  if (user.role === "ADMIN") {
+    return <Navigate to="/admin/dashboard" replace />
+  }
 
-    if (user.role === "STUDENT") {
-      return <Navigate to={`/student/dashboard/${user.id}`} replace />
-    }
+  if (user.role === "FACULTY") {
+    return <Navigate to="/faculty/dashboard" replace />
+  }
 
-    return <Navigate to="/login" replace />
-  };
+  if (user.role === "STUDENT") {
+    return <Navigate to={`/student/dashboard/${user.id}`} replace />
+  }
+
+  return <LoginPage />
+}
 
   return (
     
     <Routes>
       <Route path="/" element={<RootRedirect />} />
-      <Route path="/login" element={<LoginPage />} />
 
       <Route 
         path="/admin" 
