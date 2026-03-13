@@ -12,6 +12,8 @@ import {
 import { useRef, useState } from 'react'
 import { BatchCard } from '../admin_components/BatchCard'
 import { ToggleCard } from '../../../components/ToggleCard'
+import { uploadBulkStudent } from '@/services/upload'
+import { Spinner } from '@/components/common/Spinner'
 
 const CardStats = [
   {
@@ -44,6 +46,8 @@ export function AdminBulkUploadPage() {
   const inputRef = useRef<HTMLInputElement>(null)
   const [file, setFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
+  const [successMessage, setSuccessMessage] = useState("")
+const [errorMessage, setErrorMessage] = useState("")
   const [progress, setProgress] = useState(0)
   const sampleXLSXUrl = import.meta.env.VITE_SAMPLE_XLSX_URL;
 
@@ -82,23 +86,50 @@ export function AdminBulkUploadPage() {
     e.preventDefault()
   }
 
-  async function handleUpload() {
-    if (!file) return
+ async function handleUpload() {
+  if (!file) return
 
+  try {
     setUploading(true)
+    setErrorMessage("")
+    setSuccessMessage("")
+
+    // frist get the Request presigned URL
+    setProgress(10)
+
+    const key = await uploadBulkStudent(file, (progress) => {
+      const mappedProgress = 20 + Math.round((progress / 100) * 75)
+      setProgress(mappedProgress)
+    })
+
+    console.log("Uploaded file key:", key)
+
+    setProgress(100)
+
+    setSuccessMessage("File uploaded successfully. Processing will begin shortly.")
+
+    // reset after few seconds
+    setTimeout(() => {
+      setProgress(0)
+      setSuccessMessage("")
+    }, 4000)
+
+  } catch (error: any) {
+
+    console.error("Upload failed", error)
+
+    const message =
+      error.response?.data?.message ||
+      "File upload failed. Please try again."
+
+    setErrorMessage(message)
+
     setProgress(0)
 
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval)
-          setUploading(false)
-          return 100
-        }
-        return prev + 8
-      })
-    }, 250)
+  } finally {
+    setUploading(false)
   }
+}
 
   return (
     <>
@@ -144,15 +175,19 @@ export function AdminBulkUploadPage() {
 
           {/* selected file will be showed */}
           {file && (
-            <div className="mt-4 flex justify-between items-center bg-slate-100 p-3 rounded-lg text-sm text-slate-700">
-              <div>
-                Selected: <span className="font-medium">{file.name}</span>
+            <div className="mt-4 flex justify-between items-center bg-slate-50 border border-slate-200 p-4 rounded-xl text-sm text-slate-700">
+              
+              <div className="flex flex-col">
+                <span className="font-semibold">{file.name}</span>
+                <span className="text-xs text-slate-500">
+                  {(file.size / 1024 / 1024).toFixed(2)} MB
+                </span>
               </div>
 
               {!uploading && (
                 <button
                   onClick={removeFile}
-                  className="text-slate-500 hover:text-red-500 transition"
+                  className="text-slate-400 hover:text-red-500 transition"
                 >
                   <X size={18} />
                 </button>
@@ -169,9 +204,27 @@ export function AdminBulkUploadPage() {
                   style={{ width: `${progress}%` }}
                 />
               </div>
-              <p className="text-sm text-slate-600 mt-2">{progress}% completed</p>
+              <p className="text-sm text-slate-600 mt-2">
+                Uploading file... {progress}%
+              </p>
             </div>
           )}
+
+          {/* success message */}
+            {successMessage && (
+              <div className="mt-4 flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl">
+                <CheckCircle size={18} />
+                <span className="text-sm font-medium">{successMessage}</span>
+              </div>
+            )}
+
+            {/* error message */}
+            {errorMessage && (
+              <div className="mt-4 flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
+                <XCircle size={18} />
+                <span className="text-sm font-medium">{errorMessage}</span>
+              </div>
+            )}
 
           {/* auto password toggle */}
           <div className="mt-5 gap-5">
@@ -200,7 +253,7 @@ export function AdminBulkUploadPage() {
                 className="px-5 py-3 bg-[#0B3D93] text-white flex justify-center border text-sm rounded-xl items-center gap-3 font-semibold disabled:opacity-50 cursor-pointer"
               >
                 <Rocket size={16} />
-                {uploading ? 'Processing...' : 'Upload & Process Records'}
+                {uploading ? `${<Spinner />}Uploading ${progress}%` : 'Upload & Process Records'}
               </button>
             </div>
           </div>
