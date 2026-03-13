@@ -1,75 +1,228 @@
-# React + TypeScript + Vite
+# GEC_SHK_CLIENT
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend client for the **GEC Sheikhpura Academic ERP Portal**.
 
-Currently, two official plugins are available:
+This project provides the administrative interface for managing students, faculty, departments, and bulk student data uploads.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The application is built using **React, TypeScript, Vite, and TailwindCSS**, and deployed on **AWS S3 with CloudFront CDN** for fast and scalable delivery.
 
-## React Compiler
+---
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## 🌐 Live Application
 
-Note: This will impact Vite dev & build performances.
+https://gecshk.dev
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 Features
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Secure authentication system
+- Admin dashboard
+- Student management
+- Faculty management
+- Department management
+- Bulk student upload via CSV
+- Student directory
+- Protected routes for authenticated users
+- Responsive admin interface
+- API communication with backend services
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🛠 Tech Stack
+
+### Frontend
+
+- React
+- TypeScript
+- Vite
+- TailwindCSS
+- Axios
+- Zustand (State Management)
+- React Router
+
+### Infrastructure
+
+- AWS S3 (Static website hosting)
+- AWS CloudFront (CDN)
+- GitHub Actions (CI/CD pipeline)
+- Custom domain configuration
+
+---
+
+## 🏗 Architecture
+
+```
+Developer
+   │
+   ▼
+GitHub Repository
+   │
+   ▼
+GitHub Actions
+(CI/CD Pipeline)
+   │
+   ▼
+React Production Build
+(dist/)
+   │
+   ▼
+AWS S3
+(Static Hosting)
+   │
+   ▼
+CloudFront CDN
+   │
+   ▼
+Users
+   │
+   ▼
+React Application
+   │
+   ▼
+API Requests
+   │
+   ▼
+https://api.gecshk.dev
+   │
+   ▼
+Backend Server (AWS EC2)
+   │
+   ▼
+Database
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The frontend communicates with the backend API deployed on **AWS EC2 using Docker and Nginx**.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## ⚙ Environment Variables
+
+Create a `.env.production` file for production builds.
+
+```env
+VITE_API_URL=https://api.gecshk.dev
 ```
+
+Only variables prefixed with `VITE_` are exposed to the frontend by **Vite**.
+
+---
+
+## 💻 Local Development
+
+### Getting Started
+
+Follow the steps below to run the project locally.
+
+#### 1. Clone the repository
+
+```bash
+git clone https://github.com/<your-username>/GEC_SHK_CLIENT.git
+```
+
+#### 2. Navigate to the project directory
+
+```bash
+cd GEC_SHK_CLIENT
+```
+
+#### 3. Install dependencies
+
+```bash
+npm install
+```
+
+#### 4. Start the development server
+
+```bash
+npm run dev
+```
+
+Once the server starts, open your browser and visit:
+
+```
+http://localhost:5173
+```
+
+The React application will now be running in development mode.
+
+---
+
+## 📦 Build for Production
+
+Generate the optimized production build by running:
+
+```bash
+npm run build
+```
+
+After the build completes, the optimized static files will be generated inside the:
+
+```
+dist/
+```
+
+folder.
+
+---
+
+## 🚀 Deployment
+
+Deployment is fully automated using **GitHub Actions**.
+
+### Deployment Workflow
+
+```
+Developer
+   ↓
+Git Push
+   ↓
+GitHub Actions
+   ↓
+Build React Application
+   ↓
+Generate dist/ Folder
+   ↓
+Upload dist/ → AWS S3
+   ↓
+CloudFront Cache Invalidation
+   ↓
+Live Application Updated
+```
+
+---
+
+## 📂 Project Structure
+
+```
+src
+├── components        # Reusable UI components
+├── modules           # Feature-based modules
+│   ├── admin         # Admin related features
+│   └── login         # Authentication module
+├── routes            # Application routes
+├── services          # API service layer
+├── store             # Global state management
+├── layout            # Layout components
+├── App.tsx           # Root component
+└── main.tsx          # Application entry point
+```
+
+---
+
+## 🔐 Authentication
+
+Authentication state is managed using **Zustand**.
+
+Protected routes are implemented using a custom **ProtectedRoute** component.
+
+Unauthorized users are automatically redirected to the login page.
+
+---
+
+## 🧑‍💻 Author
+
+**Aditya**
+
+Full Stack Developer  
+MERN Stack | TypeScript | AWS | Docker
