@@ -40,6 +40,7 @@ https://gecshk.dev
 - Axios
 - Zustand (State Management)
 - React Router
+- shadcn
 
 ### Infrastructure
 
