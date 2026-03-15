@@ -2,7 +2,6 @@ import { Outlet } from 'react-router'
 import { Admin_Sidebar } from '../modules/admin/admin_components/Admin_Sidebar'
 import { Admin_TopBar } from '../modules/admin/admin_components/Admin_TopBar'
 
-
 export function AdminLayout() {
   return (
     <div className="min-h-dvh bg-[#F8FAFC]">
@@ -12,7 +11,7 @@ export function AdminLayout() {
         <div className="flex flex-1 flex-col overflow-hidden">
           <Admin_TopBar />
 
-          <main className="bg-[#E2E8F0] flex-1 overflow-y-auto">
+          <main id="main-content" className="bg-[#E2E8F0] flex-1 overflow-y-auto">
             <Outlet />
           </main>
         </div>
