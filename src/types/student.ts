@@ -7,15 +7,14 @@ export interface StudentFormData {
   parentName: string
   parentPhoneNo: string
   phoneNo: string
-  gender: "MALE" | "FEMALE" | "TRANSGENDER" | ""
+  gender: 'MALE' | 'FEMALE' | 'TRANSGENDER' | ''
   hosteller: boolean
-  admissionType: "REGULAR" | "LATERAL_ENTRY" | ""
-  admissionDate: string   // 🔥 string for input type="date"
+  admissionType: 'REGULAR' | 'LATERAL_ENTRY' | ''
+  admissionDate: string // 🔥 string for input type="date"
   deptId: number
   semId: number
   batchId: number
 }
-
 
 // Used for BACKEND REQUEST (API layer)
 export type StudentRegisterInput = {
@@ -26,10 +25,10 @@ export type StudentRegisterInput = {
   parentPhoneNo: string
   rollNo: string
   regNo: string
-  gender: "MALE" | "FEMALE" | "TRANSGENDER"
+  gender: 'MALE' | 'FEMALE' | 'TRANSGENDER'
   hosteller: boolean
-  admissionType: "REGULAR" | "LATERAL_ENTRY"
-  admissionDate: Date   // 🔥 backend expects Date
+  admissionType: 'REGULAR' | 'LATERAL_ENTRY'
+  admissionDate: Date // 🔥 backend expects Date
   deptId: number
   semId: number
   batchId: number
@@ -37,23 +36,24 @@ export type StudentRegisterInput = {
 
 // This is for the Student Directory
 export interface StudentDirectoryProp {
-  id: number;
-  name: string;
-  phoneNo: string;
-  parentName: string;
-  parentPhoneNo: string;
-  rollNo: string;
-  regNo: string;
-  section: string;
-  gender: "MALE" | "FEMALE";
-  hosteller: boolean;
-  admissionType: "REGULAR" | "LATERAL";
-  admissionDate: string;
-  createdAt: string;
-  updatedAt: string;
-  isActive: boolean;
-  userId: number;
-  deptId: number;
-  semId: number;
-  batchId: number;
+  id: number
+  name: string
+  email: string
+  phoneNo: string
+  parentName: string
+  parentPhoneNo: string
+  rollNo: string
+  regNo: string
+  section: string
+  gender: 'MALE' | 'FEMALE'
+  hosteller: boolean
+  admissionType: 'REGULAR' | 'LATERAL'
+  admissionDate: string
+  createdAt: string
+  updatedAt: string
+  isActive: boolean
+  userId: number
+  deptId: number
+  semId: number
+  batchId: number
 }
