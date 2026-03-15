@@ -6,12 +6,20 @@ export interface BatchCardProps {
   iconBgColor: string
   title: string
   value: number | string
+  className?: string
 }
 
-export function BatchCard({ icon, iconColor, iconBgColor, title, value }: BatchCardProps) {
+export function BatchCard({
+  icon,
+  iconColor,
+  iconBgColor,
+  title,
+  value,
+  className = '',
+}: BatchCardProps) {
   const Icon = icon
   return (
-    <div className="bg-white p-6 w-75 flex flex-col gap-4 rounded-xl cursor-pointer">
+    <div className={`bg-white p-6 w-75 flex flex-col gap-4 rounded-xl cursor-pointer ${className}`}>
       <div style={{ backgroundColor: iconBgColor }} className="w-13 p-3 rounded-xl">
         <Icon size={25} style={{ color: iconColor }} />
       </div>
