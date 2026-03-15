@@ -12,126 +12,106 @@ interface LoginResponse {
 }
 
 export const LoginPage = () => {
-
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
   const login = useAuthStore((state) => state.login)
   const navigate = useNavigate()
 
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault()
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
 
-  try {
-    setLoading(true)
-    setError("")
+    try {
+      setLoading(true)
+      setError('')
 
-    const res = await api.post<LoginResponse>("/api/auth/login", {
-      email,
-      password,
-    })
+      const res = await api.post<LoginResponse>('/api/auth/login', {
+        email,
+        password,
+      })
 
-    const user: User = res.data.data
+      const user: User = res.data.data
 
-    login(user)
+      login(user)
 
-    const dashboardRoutes = {
-      ADMIN: "/admin/dashboard",
-      FACULTY: "/faculty/dashboard",
-      STUDENT: "/student/dashboard",
+      const dashboardRoutes = {
+        ADMIN: '/admin/dashboard',
+        FACULTY: '/faculty/dashboard',
+        STUDENT: '/student/dashboard',
+      }
+
+      const route = dashboardRoutes[user.role]
+
+      if (!route) {
+        throw new Error('Invalid user role')
+      }
+
+      navigate(route)
+    } catch (err: any) {
+      console.log(err)
+      console.log(err.response)
+
+      setError(err.response?.data?.message || 'Login failed')
+    } finally {
+      setLoading(false)
     }
-
-    const route = dashboardRoutes[user.role]
-
-    if (!route) {
-      throw new Error("Invalid user role")
-    }
-
-    navigate(route)
-
-  } catch (err: any) {
-    console.log(err)
-    console.log(err.response)
-
-    setError(err.response?.data?.message || "Login failed")
-  } finally {
-    setLoading(false)
   }
-}
 
   return (
-    <div className='max-w-[1500px] mx-auto w-full h-screen bg-slate-300'>
-      
+    <div className="max-w-[1500px] mx-auto w-full h-screen bg-slate-300">
       {/* Header */}
       <div className="flex justify-between items-center h-16 border-b bg-white border-gray-300 px-6">
         <div className="flex items-center gap-3">
           <img src={Logo} alt="Logo" />
           <div className="flex flex-col">
-            <span className="font-semibold text-sm text-[#1E293B]">
-              GEC Sheikhpura
-            </span>
-            <span className="text-[10px] text-[#94A3B8]">
-              ADMIN PANEL
-            </span>
+            <span className="font-semibold text-sm text-[#1E293B]">GEC Sheikhpura</span>
+            <span className="text-[10px] text-[#94A3B8]">ADMIN PANEL</span>
           </div>
         </div>
       </div>
 
       {/* Login Form */}
-      <form 
-        onSubmit={handleSubmit}
-        className="min-h-screen flex justify-center items-center"
-      >
+      <form onSubmit={handleSubmit} className="min-h-screen flex justify-center items-center">
         <div className="flex flex-col items-center w-lg bg-white rounded-2xl py-10 shadow-lg">
+          <GraduationCap size={60} className="mb-3 bg-[#0B3D93]/10 p-2 rounded-full" />
 
-          <GraduationCap
-            size={60}
-            className='mb-3 bg-[#0B3D93]/10 p-2 rounded-full'
-          />
-
-          <h1 className="font-bold text-2xl">
-            Academic ERP Portal
-          </h1>
+          <h1 className="font-bold text-2xl">Academic ERP Portal</h1>
 
           {/* Email */}
-          <div className='flex flex-col gap-2 w-full px-10 pt-5'>
+          <div className="flex flex-col gap-2 w-full px-10 pt-5">
             <label>Email Address</label>
             <input
-              type='email'
+              type="email"
               required
               value={email}
               disabled={loading}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder='Enter Your Email'
-              className='bg-[#F8FAFC] p-3 rounded-xl'
+              placeholder="Enter Your Email"
+              className="bg-[#F8FAFC] p-3 rounded-xl"
             />
           </div>
 
           {/* Password */}
-          <div className='flex flex-col gap-2 w-full px-10 pt-7'>
+          <div className="flex flex-col gap-2 w-full px-10 pt-7">
             <label>Password</label>
             <input
-              type='password'
+              type="password"
               required
               value={password}
               disabled={loading}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder='Password'
-              className='bg-[#F8FAFC] p-3 rounded-xl'
+              placeholder="Password"
+              className="bg-[#F8FAFC] p-3 rounded-xl"
             />
           </div>
 
           {/* Error */}
-          {error && (
-            <p className="text-red-500 text-sm pt-4">
-              {error}
-            </p>
-          )}
+          {error && <p className="text-red-500 text-sm pt-4">{error}</p>}
 
           {/* Button */}
-          <div className='flex flex-col gap-2 w-full px-10 pt-7'>
+          <div className="flex flex-col gap-2 w-full px-10 pt-7">
             <button
               type="submit"
               disabled={loading}
@@ -143,11 +123,10 @@ export const LoginPage = () => {
                   <span>Signing In...</span>
                 </>
               ) : (
-                "Sign In"
+                'Sign In'
               )}
             </button>
           </div>
-
         </div>
       </form>
     </div>

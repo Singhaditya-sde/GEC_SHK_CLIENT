@@ -46,15 +46,15 @@ export function AdminDashboard() {
   return (
     <>
       <div className="bg-[#E2E8F0]">
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-2 p-5">
+          <div className="flex items-center justify-between ">
             <div>
-              <h1 className="text-2xl font-semibold px-5 pt-5 text-[#0F172A]">Academic Overview</h1>
-              <p className="text-sm px-5 text-[#64748B]">
+              <h1 className="text-2xl font-semibold text-[#0F172A]">Academic Overview</h1>
+              <p className="text-sm text-[#64748B]">
                 Welcome back, Dr. Sharma. Here's what's happening at GEC Sheikhpura today.
               </p>
             </div>
-            <div className="px-5 pt-5">
+            <div className="">
               <button
                 onClick={handleGenerateRes}
                 className="px-10 py-3 bg-[#0B3D93] text-white rounded-2xl text-sm flex items-center gap-3 cursor-pointer"
@@ -64,7 +64,7 @@ export function AdminDashboard() {
               </button>
             </div>
           </div>
-          <div className=" flex gap-5 p-5">
+          <div className="flex gap-5 py-5">
             {dashboardStats.map(({ id, icon, iconColor, iconBgColor, title, value }) => (
               <BatchCard
                 key={id}
@@ -77,7 +77,7 @@ export function AdminDashboard() {
             ))}
           </div>
 
-          <div className="px-5 flex gap-5">
+          <div className="flex gap-5">
             <AttendanceTrendChart />
             <DepartmentalSGPAChart />
           </div>

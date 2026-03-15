@@ -4,7 +4,7 @@ import api from "@/services/api";
 export interface User {
   id: number;
   email: string;
-  role: "ADMIN" | "FACULTY" | "STUDENT";
+  role: 'ADMIN' | 'FACULTY' | 'STUDENT';
 }
 
 interface AuthState {
@@ -46,9 +46,8 @@ export const useAuthStore = create<AuthState>((set) => ({
           role: user.role
         },
         isAuthenticated: true,
-        isCheckingAuth: false
+        isCheckingAuth: false,
       })
-
     } catch {
       set({
         user: null,
