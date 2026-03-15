@@ -4,7 +4,6 @@ import {
   Users,
   GraduationCap,
   Building2,
-  BookUser,
   LogOut,
   type LucideIcon,
 } from 'lucide-react'
@@ -22,7 +21,6 @@ const SideBarMenu: SideBarMenuProp[] = [
   { id: 'menu', title: 'Students', path: '/admin/students', icon: Users },
   { id: 'menu', title: 'Faculty', path: '/admin/faculty', icon: GraduationCap },
   { id: 'menu', title: 'Departments', path: '/admin/departments', icon: Building2 },
-  { id: 'menu', title: 'Directory', path: '/admin/directory', icon: BookUser },
 ]
 
 export function Admin_Sidebar() {
