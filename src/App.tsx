@@ -18,6 +18,10 @@ import StudentProfileView from './modules/admin/admin_components/StudentProfileV
 import StudentProfileEdit from './modules/admin/admin_components/StudentProfileEdit'
 import FacultyProfileView from './modules/admin/admin_components/FacultyProfileView'
 import FacultyProfileEdit from './modules/admin/admin_components/FacultyProfileEdit'
+import AdminCoursePage from './modules/admin/admin_pages/Admin_Course_Page'
+import AdminAttendancePage from './modules/admin/admin_pages/Admin_Attendance_Page'
+import DepartmentDetailView from './modules/admin/admin_pages/Department_Detail_View_Page'
+import DepartmentEditPage from './modules/admin/admin_pages/Department_Edit_Page'
 
 function App() {
   const user = useAuthStore((state) => state.user)
@@ -94,7 +98,21 @@ function App() {
             </Route>
           </Route>
 
-          <Route path="departments" element={<AdminDepartmentPage />} />
+          <Route path="departments">
+            <Route index element={<AdminDepartmentPage />}/>
+            <Route path=':id/:name'>
+              <Route path='view' element={<DepartmentDetailView />}/>
+              <Route path='edit' element={<DepartmentEditPage />}/>
+            </Route>
+          </Route>
+
+          <Route path='course'>
+            <Route index element={<AdminCoursePage />}/>
+          </Route>
+
+          <Route path='attendance'>
+            <Route index element={<AdminAttendancePage />}/>
+          </Route>
         </Route>
       </Routes>
     </>
