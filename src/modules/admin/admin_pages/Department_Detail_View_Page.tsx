@@ -11,7 +11,6 @@ import {
   Network,
   ShieldCheck,
   ArrowRight,
-  MapPin,
   User
 } from 'lucide-react'
 
