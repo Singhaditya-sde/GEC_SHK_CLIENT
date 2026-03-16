@@ -1,9 +1,9 @@
 import { useParams, Link } from 'react-router'
 import { GraduationCap, Users } from 'lucide-react'
-import { BatchCard } from './BatchCard'
+import { BatchCard } from '../batch/BatchCard'
 import { useEffect, useState } from 'react'
 import { getStudentById } from '@/services/studentApi'
-import { Spinner } from '@/components/common/Spinner'
+import { Spinner } from '@/components/ui common/Spinner'
 import type { StudentProfile, Enrollment, Assessment } from "@/types/student"
 
 

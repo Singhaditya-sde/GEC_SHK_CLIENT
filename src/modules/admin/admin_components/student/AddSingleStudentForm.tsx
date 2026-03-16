@@ -1,11 +1,11 @@
 import { UserPlus } from 'lucide-react'
 import { useState } from 'react'
-import { ToggleCard } from '../../../components/ToggleCard'
+import { ToggleCard } from '@/components/ui common/ToggleCard'
 import { Bed, RotateCcw, Rocket, CheckCircle } from 'lucide-react'
 import { Link } from 'react-router'
-import { registerSingleStudent } from '../../../services/studentApi'
+import { registerSingleStudent } from '@/services/studentApi'
 import type { StudentFormData, StudentRegisterInput } from '@/types/student'
-import { Spinner } from '@/components/common/Spinner'
+import { Spinner } from '@/components/ui common/Spinner'
 
 function mapFormToPayload(form: StudentFormData): StudentRegisterInput {
   return {

@@ -15,6 +15,7 @@ export function Admin_TopBar() {
     '/admin/students/add-student': 'Add Single Student',
     '/admin/students/:id': 'Student Profile',
     '/admin/students/:id/edit': 'Edit Student Profile',
+    '/admin/faculty/add_faculty' : 'Add Faculty'
   }
 
   const getRouteTitle = (pathname: string) => {

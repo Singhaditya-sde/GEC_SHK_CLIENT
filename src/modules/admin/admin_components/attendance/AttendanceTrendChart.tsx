@@ -25,7 +25,6 @@ const data: ChartData[] = [
 export function AttendanceTrendChart() {
   return (
     <div className="w-full h-96 lg:h-[500px]  bg-white py-6 rounded-xl shadow-sm flex flex-col">
-      {/* Header part is here  */}
       <div className="flex justify-between items-center px-5 pb-4">
         <div>
           <h1 className="text-2xl font-semibold text-[#0F172A]">Academic Overview</h1>
@@ -38,11 +37,9 @@ export function AttendanceTrendChart() {
         </div>
       </div>
 
-      {/* Chart Area is here */}
       <div className="flex-1 ">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 10 }}>
-            {/* This is the for the shadow effect in the chart*/}
             <defs>
               <filter id="attendanceLineShadow" height="200%">
                 <feDropShadow
@@ -54,9 +51,7 @@ export function AttendanceTrendChart() {
                 />
               </filter>
             </defs>
-
             <CartesianGrid vertical={false} stroke="#E2E8F0" />
-
             <XAxis
               dataKey="name"
               tick={{ fill: '#64748B', fontSize: 12 }}
@@ -64,7 +59,6 @@ export function AttendanceTrendChart() {
               axisLine={false}
               tickLine={false}
             />
-
             <YAxis
               domain={[0, 100]}
               tick={{ fill: '#64748B', fontSize: 12 }}
@@ -72,7 +66,6 @@ export function AttendanceTrendChart() {
               tickLine={false}
               tickFormatter={(value) => `${value}%`}
             />
-
             <Tooltip
               formatter={(value, name) => [`${value}%`, name]}
               contentStyle={{
@@ -83,7 +76,6 @@ export function AttendanceTrendChart() {
               }}
               labelStyle={{ color: '#64748B', fontWeight: 500 }}
             />
-
             <Line
               type="monotone"
               dataKey="attendance"

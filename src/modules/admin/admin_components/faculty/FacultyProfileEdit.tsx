@@ -2,15 +2,13 @@ import { useParams, useNavigate } from 'react-router'
 import { useState } from 'react'
 import { facultyData } from '@/data/faculty'
 import type { Faculty } from '@/types/faculty'
-import { Spinner } from '@/components/common/Spinner'
+import { Spinner } from '@/components/ui common/Spinner'
 import { CheckCircle } from 'lucide-react'
 
 export default function FacultyProfileEdit() {
   const { id } = useParams()
   const navigate = useNavigate()
-
   const faculty = facultyData.find((f) => f.id === Number(id))
-
   if (!faculty) {
     return <div className="p-6 text-red-500">Faculty not found</div>
   }
@@ -21,7 +19,6 @@ export default function FacultyProfileEdit() {
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = e.target
-
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -30,20 +27,14 @@ export default function FacultyProfileEdit() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-
     try {
       setLoading(true)
-
       await new Promise((res) => setTimeout(res, 700))
-
       const index = facultyData.findIndex((f) => f.id === Number(id))
-
       if (index !== -1) {
         facultyData[index] = { ...facultyData[index], ...formData }
       }
-
       setSuccess(true)
-
       setTimeout(() => {
         navigate(`/admin/faculty/${id}`)
       }, 1200)
@@ -55,16 +46,13 @@ export default function FacultyProfileEdit() {
   return (
     <div className="px-5 space-y-6">
       {/* HEADER */}
-
       <div>
         <h1 className="text-2xl font-semibold pt-5 text-[#0F172A]">Edit Faculty Profile</h1>
         <p className="text-sm text-[#64748B]">Update faculty information and research details.</p>
       </div>
-
       <div className="bg-white p-6 rounded-xl border border-slate-200">
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* BASIC INFO */}
-
           <div className="grid grid-cols-2 gap-6">
             <div className="flex flex-col gap-1">
               <label className="text-sm font-medium text-[#334155]">
@@ -128,7 +116,6 @@ export default function FacultyProfileEdit() {
           </div>
 
           {/* RESEARCH DETAILS */}
-
           <div className="grid grid-cols-3 gap-6">
             <div className="flex flex-col gap-1">
               <label className="text-sm font-medium text-[#334155]">
@@ -141,7 +128,6 @@ export default function FacultyProfileEdit() {
                 className="border border-slate-300 bg-[#F8FAFC] rounded-xl px-3 py-2"
               />
             </div>
-
             <div className="flex flex-col gap-1">
               <label className="text-sm font-medium text-[#334155]">
                 Experience (Years) <span className="text-red-400">*</span>
@@ -153,7 +139,6 @@ export default function FacultyProfileEdit() {
                 className="border border-slate-300 bg-[#F8FAFC] rounded-xl px-3 py-2"
               />
             </div>
-
             <div className="flex flex-col gap-1">
               <label className="text-sm font-medium text-[#334155]">
                 Projects <span className="text-red-400">*</span>
@@ -168,7 +153,6 @@ export default function FacultyProfileEdit() {
           </div>
 
           {/* SUMMARY */}
-
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-[#334155]">
               Professional Summary <span className="text-red-400">*</span>
@@ -183,7 +167,6 @@ export default function FacultyProfileEdit() {
           </div>
 
           {/* SKILLS */}
-
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-[#334155]">
               Skills (comma separated) <span className="text-red-400">*</span>
@@ -197,7 +180,6 @@ export default function FacultyProfileEdit() {
           </div>
 
           {/* SUBMIT */}
-
           <div className="flex justify-end gap-4">
             <button
               type="button"
