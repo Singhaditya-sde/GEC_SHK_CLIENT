@@ -1,9 +1,9 @@
-import { ToggleCard } from '@/components/ToggleCard'
+import { ToggleCard } from '@/components/ui common/ToggleCard'
 import { useState } from 'react'
 import { ShieldCheck, CheckCircle, AlertCircle } from 'lucide-react'
 import type { FacultyForm } from '@/types/faculty'
 import { registerFaculty } from '@/services/faculty'
-import { Spinner } from '@/components/common/Spinner'
+import { Spinner } from '@/components/ui common/Spinner'
 
 export function AdminAddFacultyPage() {
   const [loading, setLoading] = useState(false)

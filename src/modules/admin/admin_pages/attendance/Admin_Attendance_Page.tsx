@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { BatchCard } from "../admin_components/BatchCard"
+import { BatchCard } from "../../admin_components/batch/BatchCard"
 import { CheckCheck, AlertTriangle, BarChart3, Download , Search , ChevronRight , ChevronLeft , Mail } from "lucide-react"
 
 type Attendance = {
@@ -82,32 +82,22 @@ export default function AdminAttendancePage() {
 
   return (
     <div className="px-5 space-y-6">
-
-      {/* HEADER */}
-
       <div className="flex justify-between items-center">
-
         <div>
           <h1 className="text-2xl font-semibold pt-5 text-[#0F172A]">
             Student Attendance
           </h1>
-
           <p className="text-sm text-[#64748B]">
             Portal / Student Records
           </p>
         </div>
-
         <button className="flex items-center gap-2 px-4 py-2 bg-[#0B3D93] text-white rounded-lg text-sm">
           <Download size={16} />
           Download Report
         </button>
-
       </div>
 
-      {/* STATS USING BATCHCARD */}
-
       <div className="flex gap-5">
-
         {attendanceStats.map(
           ({ icon, iconColor, iconBgColor, title, value }) => (
             <BatchCard
@@ -123,13 +113,9 @@ export default function AdminAttendancePage() {
         )}
       </div>
 
-      {/* FILTER BAR */}
-
       <div className="bg-white p-4 rounded-2xl border border-slate-200 flex items-center gap-4">
-
         <div className="flex items-center gap-3 flex-1 bg-[#F8FAFC] border border-slate-200 rounded-full px-4 py-3">
           <Search size={18} className="text-slate-400" />
-
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -137,42 +123,40 @@ export default function AdminAttendancePage() {
             className="bg-transparent outline-none text-sm flex-1"
           />
         </div>
+          <select
+            value={department}
+            onChange={(e) => setDepartment(e.target.value)}
+            className="border border-slate-200 bg-[#F8FAFC] rounded-full px-4 py-3 text-sm"
+          >
+            <option>Computer Science</option>
+            <option>Electrical</option>
+            <option>Mechanical</option>
+          </select>
 
-        <select
-          value={department}
-          onChange={(e) => setDepartment(e.target.value)}
-          className="border border-slate-200 bg-[#F8FAFC] rounded-full px-4 py-3 text-sm"
-        >
-          <option>Computer Science</option>
-          <option>Electrical</option>
-          <option>Mechanical</option>
-        </select>
+          <select
+            value={batch}
+            onChange={(e) => setBatch(e.target.value)}
+            className="border border-slate-200 bg-[#F8FAFC] rounded-full px-4 py-3 text-sm"
+          >
+            <option>2021-2025</option>
+            <option>2022-2026</option>
+          </select>
 
-        <select
-          value={batch}
-          onChange={(e) => setBatch(e.target.value)}
-          className="border border-slate-200 bg-[#F8FAFC] rounded-full px-4 py-3 text-sm"
-        >
-          <option>2021-2025</option>
-          <option>2022-2026</option>
-        </select>
+          <select
+            value={course}
+            onChange={(e) => setCourse(e.target.value)}
+            className="border border-slate-200 bg-[#F8FAFC] rounded-full px-4 py-3 text-sm"
+          >
+            <option>Data Structures</option>
+            <option>Operating Systems</option>
+          </select>
 
-        <select
-          value={course}
-          onChange={(e) => setCourse(e.target.value)}
-          className="border border-slate-200 bg-[#F8FAFC] rounded-full px-4 py-3 text-sm"
-        >
-          <option>Data Structures</option>
-          <option>Operating Systems</option>
-        </select>
-
-        <button className="flex text-center gap-2 ml-auto px-4 py-2 bg-red-100 text-red-600 text-sm rounded-full">
-          <Mail size={18}/> Send Low Attendance Warning
-        </button>
+          <button className="flex text-center gap-2 ml-auto px-4 py-2 bg-red-100 text-red-600 text-sm rounded-full">
+            <Mail size={18}/> Send Low Attendance Warning
+          </button>
 
       </div>
 
-      {/* ATTENDANCE TABLE */}
 
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
 

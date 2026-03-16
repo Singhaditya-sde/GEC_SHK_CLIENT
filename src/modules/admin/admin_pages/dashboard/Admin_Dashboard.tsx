@@ -1,7 +1,7 @@
 import { GraduationCap, Users, Building2, Download } from 'lucide-react'
-import { BatchCard } from '../admin_components/BatchCard'
-import { AttendanceTrendChart } from '../admin_components/AttendanceTrendChart'
-import { DepartmentalSGPAChart } from '../admin_components/DepartmentalSGPAChart'
+import { BatchCard } from '../../admin_components/batch/BatchCard'
+import { AttendanceTrendChart } from '../../admin_components/attendance/AttendanceTrendChart'
+import { DepartmentalSGPAChart } from '../../admin_components/department/DepartmentalSGPAChart'
 
 const dashboardStats = [
   {

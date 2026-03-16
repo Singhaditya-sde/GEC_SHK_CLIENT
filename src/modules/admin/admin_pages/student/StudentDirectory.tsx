@@ -2,7 +2,7 @@ import { Search, SlidersHorizontal, Eye, ChevronLeft, ChevronRight } from 'lucid
 import { useEffect, useState } from 'react'
 import { getStudents } from '@/services/studentApi'
 import { Link } from 'react-router'
-import { Spinner } from '@/components/common/Spinner'
+import { Spinner } from '@/components/ui common/Spinner'
 
 export function StudentDirectory() {
   const [searchTerm, setSearchTerm] = useState('')

@@ -1,10 +1,10 @@
 import { GraduationCap, Users, Building2, Plus } from 'lucide-react'
 import { StudentDirectory } from './StudentDirectory'
-import { BatchCard } from '../admin_components/BatchCard'
+import { BatchCard } from '../../admin_components/batch/BatchCard'
 import { Link } from 'react-router'
 import { useState , useEffect } from 'react'
 import { getStudentsForAdmin } from '@/services/studentApi'
-import { Spinner } from '@/components/common/Spinner'
+import { Spinner } from '@/components/ui common/Spinner'
 
 type StudentAdminStats = {
   allStudents: {
