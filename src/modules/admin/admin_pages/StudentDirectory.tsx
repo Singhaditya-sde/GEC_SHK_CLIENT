@@ -1,55 +1,72 @@
 import { Search, SlidersHorizontal, Eye, ChevronLeft, ChevronRight } from 'lucide-react'
-import { useState } from 'react'
-// import type { StudentDirectoryProp } from "@/types/student";
-import { students } from '@/data/students'
+import { useEffect, useState } from 'react'
+import { getStudents } from '@/services/studentApi'
 import { Link } from 'react-router'
-// import StudentProfileView from "../admin_components/StudentProfileView";
+import { Spinner } from '@/components/common/Spinner'
 
 export function StudentDirectory() {
-  // const [profileView, setProfileView] = useState<StudentDirectoryProp | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedDepartment, setSelectedDepartment] = useState('')
   const [selectedBatch, setSelectedBatch] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
+  const [students, setStudents] = useState<any[]>([])
+  const [totalPages, setTotalPages] = useState(1)
+  const [loading, setLoading] = useState(false)
+  const [appliedFilters, setAppliedFilters] = useState({
+  search: "",
+  department: "",
+  batch: ""
+  })
   const itemsPerPage = 20
 
-  const departmentMap: Record<number, string> = {
-    1: 'CSE',
-    2: 'EE',
-    3: 'ECE',
-    4: 'ME',
-    5: 'MECH',
-  }
+const departmentIdMap: Record<string, number> = {
+  ME: 1,
+  CSE: 2,
+  ECE: 3,
+  CE: 4,
+  EEE: 5
+}
 
-  // this is fro the filtering students
+const batchIdMap: Record<string, number> = {
+  "2025": 1,
+  "2024": 2,
+  "2023": 3,
+  "2022": 4
+}
 
-  const filteredStudents = students.filter((filterchild) => {
-    const matchedSearch =
-      filterchild.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      filterchild.rollNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      filterchild.regNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      filterchild.phoneNo.includes(searchTerm)
+const hasActiveFilters = 
+  appliedFilters.search ||
+  appliedFilters.department ||
+  appliedFilters.batch
 
-    const matchesDepartment =
-      selectedDepartment === 'All' ||
-      selectedDepartment === '' ||
-      (selectedDepartment === 'CSE' && filterchild.deptId === 1) ||
-      (selectedDepartment === 'EE' && filterchild.deptId === 2)
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try{
+        setLoading(true)
 
-    const matchesBatch =
-      selectedBatch === 'All' ||
-      selectedBatch === '' ||
-      filterchild.batchId.toString() === selectedBatch
+        const data = await getStudents({
+          page: currentPage,
+          limit: itemsPerPage,
+          search: appliedFilters.search,
+          deptId: appliedFilters.department
+            ? departmentIdMap[appliedFilters.department]
+            : undefined,
+          batchId: appliedFilters.batch
+            ? batchIdMap[appliedFilters.batch]
+            : undefined,
+        })
 
-    return matchedSearch && matchesDepartment && matchesBatch
-  })
+        setStudents(data.students)
+        setTotalPages(data.pagination.totalPages)
+      } catch (error) {
+        console.error("Failed to fetch students",error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchStudents()
+  }, [currentPage, appliedFilters])
 
-  const totalPages = Math.ceil(filteredStudents.length / itemsPerPage)
-
-  const paginatedStudents = filteredStudents.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  )
   return (
     <div className="px-5">
       <div className="flex items-center gap-4 mt-5 bg-white p-4 rounded-2xl border border-slate-200">
@@ -57,10 +74,20 @@ export function StudentDirectory() {
           <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
-            placeholder="Search by name, roll number, or email..."
+            placeholder="Search by name, roll number, or registration number..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-11 pr-4 py-3 rounded-full bg-slate-50 border border-slate-200 focus-visible:ring-2 focus-visible:ring-indigo-500"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setAppliedFilters({
+                  search: searchTerm,
+                  department: selectedDepartment,
+                  batch: selectedBatch
+                })
+                setCurrentPage(1)
+              }
+            }}
+            className="w-full pl-11 pr-4 py-3 rounded-full bg-slate-50 border border-slate-200 focus-visible:ring-1 focus-visible:ring-indigo-500"
           />
         </div>
 
@@ -69,12 +96,12 @@ export function StudentDirectory() {
           onChange={(e) => setSelectedDepartment(e.target.value)}
           className="px-4 py-3 rounded-full bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
-          <option value="All">All Departments</option>
+          <option value="">All Departments</option>
           <option value="CSE">CSE</option>
           <option value="ECE">ECE</option>
-          <option value="EE">EE</option>
+          <option value="EEE">EEE</option>
           <option value="ME">ME</option>
-          <option value="MECH">MECH</option>
+          <option value="CE">CE</option>
         </select>
 
         <select
@@ -82,16 +109,41 @@ export function StudentDirectory() {
           onChange={(e) => setSelectedBatch(e.target.value)}
           className="px-4 py-3 rounded-full bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
-          <option value="All">Batch Year</option>
-          <option value="2025">2025</option>
-          <option value="2024">2024</option>
-          <option value="2023">2023</option>
-          <option value="2022">2022</option>
+          <option value="">Batch Year</option>
+          <option value="2025">2025-2029</option>
+          <option value="2024">2024-2028</option>
+          <option value="2023">2023-2027</option>
+          <option value="2022">2022-2026</option>
         </select>
 
-        <button className="flex items-center gap-2 px-4 py-3 rounded-full bg-slate-50 border border-slate-200 hover:bg-slate-100 transition">
+        <button
+          disabled={loading}
+          onClick={() => {
+            if (hasActiveFilters) {
+              // Clear the filters frist 
+              setSearchTerm("")
+              setSelectedDepartment("")
+              setSelectedBatch("")
+              setAppliedFilters({
+                search: "",
+                department: "",
+                batch: ""
+              })
+            } else {
+              // apply the filters
+              setAppliedFilters({
+                search: searchTerm,
+                department: selectedDepartment,
+                batch: selectedBatch
+              })
+            }
+
+            setCurrentPage(1)
+          }}
+          className="flex items-center gap-2 px-4 py-3 rounded-full bg-slate-50 border border-slate-200 hover:bg-slate-100 transition cursor-pointer"
+        >
           <SlidersHorizontal size={16} />
-          Filters
+          {hasActiveFilters ? "Clear" : "Apply"}
         </button>
       </div>
 
@@ -106,21 +158,34 @@ export function StudentDirectory() {
                 <th className="px-6 py-4">Reg No</th>
                 <th className="px-6 py-4">Department</th>
                 <th className="px-6 py-4">Batch</th>
-                <th className="px-6 py-4">Gender</th>
                 <th className="px-6 py-4">View</th>
               </tr>
             </thead>
 
             <tbody className="divide-y divide-slate-100">
-              {paginatedStudents.map((student) => (
+               {loading ? (
+                <tr>
+                  <td colSpan={8} className="py-20 text-center">
+                    <div className='flex justify-center items-center h-full'>
+                        <Spinner size={28}/>
+                    </div>
+                  </td>
+                </tr>
+              ) : students.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="py-10 text-center text-slate-500">
+                    No students found
+                  </td>
+                </tr>
+              ) : (
+                students.map((student , index) => (
                 <tr key={student.id}>
-                  <td className="px-6 py-4 text-slate-600">{student.id}</td>
+                  <td className="px-6 py-4 text-slate-600">{(currentPage - 1) * itemsPerPage + index + 1}</td>
                   <td className="px-6 py-4 text-slate-600">{student.name}</td>
                   <td className="px-6 py-4 text-slate-600">{student.rollNo}</td>
                   <td className="px-6 py-4 text-slate-600">{student.regNo}</td>
-                  <td className="px-6 py-4 text-slate-600">{departmentMap[student.deptId]}</td>
-                  <td className="px-6 py-4 text-slate-600">{student.batchId}</td>
-                  <td className="px-6 py-4 text-slate-600">{student.gender}</td>
+                  <td className="px-6 py-4 text-slate-600">{student.dept?.deptCode}</td>
+                  <td className="px-6 py-4 text-slate-600">{student.batch?.startYear}-{student.batch?.endYear}</td>
                   <td className="px-6 py-4 text-slate-600 ">
                     <Link to={`/admin/students/${student.id}`}>
                       <button className="p-1 rounded hover:text-yellow-500 cursor-pointer">
@@ -129,7 +194,7 @@ export function StudentDirectory() {
                     </Link>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
 
