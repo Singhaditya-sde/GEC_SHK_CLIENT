@@ -60,7 +60,7 @@ export const LoginPage = () => {
   }
 
   return (
-    <div className="max-w-[1500px] mx-auto w-full h-screen bg-slate-300">
+    <div className="max-w-[2000px] mx-auto w-full h-screen bg-slate-300">
       {/* Header */}
       <div className="flex justify-between items-center h-16 border-b bg-white border-gray-300 px-6">
         <div className="flex items-center gap-3">
