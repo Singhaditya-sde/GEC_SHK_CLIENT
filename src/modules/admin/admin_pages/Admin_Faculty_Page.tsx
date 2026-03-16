@@ -107,6 +107,7 @@ export function AdminFacultyPage() {
             iconBgColor={iconBgColor}
             title={title}
             value={value}
+            className='w-full lg:py-13'
           />
         ))}
       </div>
