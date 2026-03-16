@@ -5,6 +5,8 @@ import {
   GraduationCap,
   Building2,
   LogOut,
+  Book,
+  CalendarCheck,
   type LucideIcon,
 } from 'lucide-react'
 import { NavLink } from 'react-router'
@@ -17,10 +19,12 @@ export interface SideBarMenuProp {
 }
 
 const SideBarMenu: SideBarMenuProp[] = [
-  { id: 'menu', title: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
-  { id: 'menu', title: 'Students', path: '/admin/students', icon: Users },
-  { id: 'menu', title: 'Faculty', path: '/admin/faculty', icon: GraduationCap },
-  { id: 'menu', title: 'Departments', path: '/admin/departments', icon: Building2 },
+  { id: '1', title: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
+  { id: '2', title: 'Students', path: '/admin/students', icon: Users },
+  { id: '3', title: 'Faculty', path: '/admin/faculty', icon: GraduationCap },
+  { id: '4', title: 'Departments', path: '/admin/departments', icon: Building2 },
+  { id: '5', title: 'Courses', path: '/admin/course', icon: Book },
+  { id: '6', title: 'Attendance', path: '/admin/attendance', icon: CalendarCheck },
 ]
 
 export function Admin_Sidebar() {
