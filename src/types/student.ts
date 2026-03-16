@@ -1,4 +1,3 @@
-// Used for FORM STATE (UI layer)
 export interface StudentFormData {
   email: string
   rollNo: string
@@ -10,13 +9,12 @@ export interface StudentFormData {
   gender: 'MALE' | 'FEMALE' | 'TRANSGENDER' | ''
   hosteller: boolean
   admissionType: 'REGULAR' | 'LATERAL_ENTRY' | ''
-  admissionDate: string // 🔥 string for input type="date"
+  admissionDate: string 
   deptId: number
   semId: number
   batchId: number
 }
 
-// Used for BACKEND REQUEST (API layer)
 export type StudentRegisterInput = {
   email: string
   name: string
@@ -28,13 +26,13 @@ export type StudentRegisterInput = {
   gender: 'MALE' | 'FEMALE' | 'TRANSGENDER'
   hosteller: boolean
   admissionType: 'REGULAR' | 'LATERAL_ENTRY'
-  admissionDate: Date // 🔥 backend expects Date
+  admissionDate: string 
   deptId: number
   semId: number
   batchId: number
 }
 
-// This is for the Student Directory
+
 export interface StudentDirectoryProp {
   id: number
   name: string
@@ -56,4 +54,69 @@ export interface StudentDirectoryProp {
   deptId: number
   semId: number
   batchId: number
+}
+
+
+export type Course = {
+  id: number
+  title: string
+}
+
+export type Offering = {
+  course: Course
+}
+
+export type Enrollment = {
+  offering: Offering
+}
+
+export type Assessment = {
+  courseId: number
+  courseTitle: string
+  componentName: string
+  maxMarks: number
+  marks: number | null
+}
+
+export type Department = {
+  id: number
+  deptCode: string
+  name: string
+}
+
+export type Semester = {
+  id: number
+  number: number
+}
+
+export type User = {
+  id: number
+  email: string
+}
+
+export type Batch = {
+  startYear: number
+  endYear: number
+}
+
+export type StudentProfile = {
+  id: number
+  name: string
+  phoneNo: string
+  parentName: string
+  parentPhoneNo: string
+  rollNo: string
+  regNo: string
+  section: string
+  hosteller: boolean
+  admissionDate: string
+  admissionType: string
+  cgpa: string | number
+
+  dept: Department
+  sem: Semester
+  user: User
+  batch: Batch
+
+  enrollment: Enrollment[]
 }

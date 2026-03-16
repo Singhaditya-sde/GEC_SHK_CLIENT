@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { ToggleCard } from '../../../components/ToggleCard'
 import { Bed, RotateCcw, Rocket, CheckCircle } from 'lucide-react'
 import { Link } from 'react-router'
-import { registerSingleStudent } from '../../../services/student'
+import { registerSingleStudent } from '../../../services/studentApi'
 import type { StudentFormData, StudentRegisterInput } from '@/types/student'
 import { Spinner } from '@/components/common/Spinner'
 
@@ -19,7 +19,7 @@ function mapFormToPayload(form: StudentFormData): StudentRegisterInput {
     gender: form.gender as 'MALE' | 'FEMALE' | 'TRANSGENDER',
     hosteller: form.hosteller,
     admissionType: form.admissionType as 'REGULAR' | 'LATERAL_ENTRY',
-    admissionDate: new Date(form.admissionDate),
+    admissionDate: new Date(form.admissionDate).toISOString(),
     deptId: form.deptId,
     semId: form.semId,
     batchId: form.batchId,
@@ -304,7 +304,7 @@ export function AddSingleStudentForm() {
                 >
                   <option value="0">Select Batch</option>
                   <option value="1">2023-2027</option>
-                  <option value="1">2024-2028</option>
+                  <option value="2">2024-2028</option>
                 </select>
                 {errors.batchId && <p className="text-red-500 text-xs mt-1">{errors.batchId}</p>}
               </div>

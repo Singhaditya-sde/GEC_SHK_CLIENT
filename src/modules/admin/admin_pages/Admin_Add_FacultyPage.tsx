@@ -18,6 +18,13 @@ export function AdminAddFacultyPage() {
     password: '',
     deptId: 0,
     isHOD: false,
+
+    designation: '',
+    publications: 0,
+    experience: 0,
+    projects: 0,
+    skills: '',
+    summary: '',
   })
 
   //this is the function for the validate the form
@@ -48,6 +55,26 @@ export function AdminAddFacultyPage() {
       newErrors.deptId = 'Department is required'
     }
 
+    if (!formData.designation.trim()) {
+      newErrors.designation = 'Designation is required'
+    }
+
+    if (!formData.skills.trim()) {
+      newErrors.skills = 'Skills are required'
+    }
+
+    if (!formData.summary.trim()) {
+      newErrors.summary = 'Summary is required'
+    }
+
+    if (!formData.experience) {
+      newErrors.experience = 'Experience is required'
+    }
+
+    if (!formData.publications && formData.publications !== 0) {
+      newErrors.publications = 'Publications count required'
+    }
+    
     setErrors(newErrors)
 
     return Object.keys(newErrors).length === 0
@@ -72,10 +99,17 @@ export function AdminAddFacultyPage() {
         name: '',
         email: '',
         phoneNo: '',
-        password: '',
         regNo: '',
+        password: '',
         deptId: 0,
         isHOD: false,
+
+        designation: '',
+        publications: 0,
+        experience: 0,
+        projects: 0,
+        skills: '',
+        summary: '',
       })
 
       setTimeout(() => {
@@ -227,6 +261,104 @@ export function AdminAddFacultyPage() {
                   ${errors.password ? 'border-red-500' : 'border-[#E2E8F0]'}`}
               />
               {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-10 mt-5">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-[#334155]">
+                Designation <span className="text-red-400">*</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Professor / Associate Professor"
+                value={formData.designation}
+                onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
+                className={`w-full border bg-[#F8FAFC] rounded-xl px-3 py-2 text-md 
+                  focus:ring-2 focus:ring-indigo-500 outline-none appearance-none
+                  ${errors.designation ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+              />
+              {errors.designation && <p className="text-red-500 text-xs mt-1">{errors.designation}</p>}
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-[#334155]">
+                Publications <span className="text-red-400">*</span>
+              </label>
+              <input
+                type="number"
+                value={formData.publications}
+                onChange={(e) => setFormData({ ...formData, publications: Number(e.target.value) })}
+                className={`w-full border bg-[#F8FAFC] rounded-xl px-3 py-2 text-md 
+                  focus:ring-2 focus:ring-indigo-500 outline-none appearance-none
+                  ${errors.publications ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+              />
+              {errors.publications && <p className="text-red-500 text-xs mt-1">{errors.publications}</p>}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-10 mt-5">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-[#334155]">
+                Experience (Years) <span className="text-red-400">*</span>
+              </label>
+              <input
+                type="number"
+                value={formData.experience}
+                onChange={(e) => setFormData({ ...formData, experience: Number(e.target.value) })}
+                className={`w-full border bg-[#F8FAFC] rounded-xl px-3 py-2 text-md 
+                  focus:ring-2 focus:ring-indigo-500 outline-none appearance-none
+                  ${errors.experience ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+              />
+              {errors.experience && <p className="text-red-500 text-xs mt-1">{errors.experience}</p>}
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-[#334155]">
+                Projects <span className="text-red-400">*</span>
+              </label>
+              <input
+                type="number"
+                value={formData.projects}
+                onChange={(e) => setFormData({ ...formData, projects: Number(e.target.value) })}
+                className={`w-full border bg-[#F8FAFC] rounded-xl px-3 py-2 text-md 
+                  focus:ring-2 focus:ring-indigo-500 outline-none appearance-none
+                  ${errors.projects ? 'border-red-500' : 'border-[#E2E8F0]'}`}
+              />
+              {errors.projects && <p className="text-red-500 text-xs mt-1">{errors.projects}</p>}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-10 mt-5">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-[#334155]">
+                 Skills (comma separated) <span className="text-red-400">*</span>
+              </label>
+              <textarea
+                rows={4}
+                placeholder='AI, Machine Learning, Cloud Computing'
+                value={formData.skills}
+                onChange={(e) =>
+                  setFormData({ ...formData, skills: e.target.value })
+                }
+                className="border border-[#E2E8F0] bg-[#F8FAFC] rounded-xl px-3 py-2
+                focus:ring-2 focus:ring-indigo-500 outline-none"
+              />
+              {errors.skills && <p className="text-red-500 text-xs mt-1">{errors.skills}</p>}
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-[#334155]">
+                Professional Summary <span className="text-red-400">*</span>
+              </label>
+              <textarea
+                rows={4}
+                placeholder='Write Summary'
+                value={formData.summary}
+                onChange={(e) =>
+                  setFormData({ ...formData, summary: e.target.value })
+                }
+                className="border border-[#E2E8F0] bg-[#F8FAFC] rounded-xl px-3 py-2
+                focus:ring-2 focus:ring-indigo-500 outline-none"
+              />
+              {errors.summary && <p className="text-red-500 text-xs mt-1">{errors.summary}</p>}
             </div>
           </div>
 

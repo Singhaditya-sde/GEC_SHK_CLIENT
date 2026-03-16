@@ -1,98 +1,100 @@
 import { useParams, Link } from 'react-router'
-import { students } from '@/data/students'
 import { GraduationCap, Users } from 'lucide-react'
 import { BatchCard } from './BatchCard'
+import { useEffect, useState } from 'react'
+import { getStudentById } from '@/services/studentApi'
+import { Spinner } from '@/components/common/Spinner'
+import type { StudentProfile, Enrollment, Assessment } from "@/types/student"
 
-const StudentProfilePageStats = [
-  {
-    id: 'students',
-    icon: GraduationCap,
-    iconColor: '#0B3D93',
-    iconBgColor: 'rgba(11, 61, 147, 0.1)',
-    title: 'CGPA',
-    value: '8.54',
-  },
-  {
-    id: 'students',
-    icon: Users,
-    iconColor: '#4F46E5',
-    iconBgColor: 'rgba(79, 70, 229, 0.1)',
-    title: 'Attendance',
-    value: '80%',
-  },
-]
 
-const results = [
-  {
-    id: 'CS-501',
-    subject: 'Operating Systems',
-    score: '45/50',
-    grade: 'A+',
-    faculty: 'Prof. K. Verma',
-    date: 'Nov 12, 2023',
-  },
-  {
-    id: 'CS-502',
-    subject: 'Database Systems',
-    score: '42/50',
-    grade: 'A',
-    faculty: 'Dr. S. Mukherjee',
-    date: 'Nov 15, 2023',
-  },
-  {
-    id: 'CS-503',
-    subject: 'Compilers Design',
-    score: '38/50',
-    grade: 'B+',
-    faculty: 'Prof. A. Singh',
-    date: 'Nov 16, 2023',
-  },
-  {
-    id: 'HS-102',
-    subject: 'Economics for Engineers',
-    score: '48/50',
-    grade: 'O',
-    faculty: 'Dr. R. Gupta',
-    date: 'Nov 18, 2023',
-  },
-]
 
-const departmentMap: Record<number, string> = {
-  1: 'Computer Science & Engineering',
-  2: 'Electronics & Communication Engineering',
-  3: 'Mechanical Engineering',
-  4: 'Civil Engineering',
-  5: 'Electrical Engineering',
-}
 
 export default function StudentProfileView() {
+  
   const { id } = useParams()
-  const student = students.find((s) => s.id === Number(id))
-  if (!student) {
-    return <div className="p-10 text-red-500">Student Not Found</div>
+  const [student, setStudent] = useState<StudentProfile | null>(null)
+  const [assessments, setAssessments] = useState<Assessment[]>([])
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+  const fetchStudent = async () => {
+    try {
+      const data = await getStudentById(Number(id))
+
+      setStudent(data.student)
+      setAssessments(data.studentAssessment || [])
+    } catch (error) {
+      console.error("Failed to fetch student", error)
+    } finally {
+      setLoading(false)
+    }
   }
-  const studentInfo = [
-    { id: 1, label: 'Roll Number', value: student.rollNo },
-    { id: 2, label: 'Registration Number', value: student.regNo },
-    { id: 3, label: 'Email', value: student.email },
-    { id: 4, label: 'Phone Number', value: student.phoneNo },
-    { id: 5, label: 'Parent Name', value: student.parentName },
-    { id: 6, label: 'Parent Phone', value: student.parentPhoneNo },
-    { id: 7, label: 'Section', value: student.section },
-    { id: 8, label: 'Gender', value: student.gender },
-    { id: 9, label: 'Hosteller', value: student.hosteller ? 'Yes' : 'No' },
-    { id: 10, label: 'Admission Type', value: student.admissionType },
-    { id: 11, label: 'Admission Date', value: student.admissionDate },
-    { id: 12, label: 'Batch', value: student.batchId },
+
+  fetchStudent()
+}, [id])
+
+  const StudentProfilePageStats = [
+    {
+      id: 'cgpa',
+      icon: GraduationCap,
+      iconColor: '#0B3D93',
+      iconBgColor: 'rgba(11, 61, 147, 0.1)',
+      title: 'CGPA',
+      value: student?.cgpa ?? "N/A",
+    },
+    {
+      id: 'attendance',
+      icon: Users,
+      iconColor: '#4F46E5',
+      iconBgColor: 'rgba(79, 70, 229, 0.1)',
+      title: 'Attendance',
+      value: '80%',
+    },
   ]
 
-  const getYearFromSemester = (semester: number) => {
-    const year = Math.ceil(semester / 2)
+const results =
+  student?.enrollment?.map((e: Enrollment) => {
+    const courseId = e.offering.course.id
 
-    const yearNames = ['', 'First Year', 'Second Year', 'Third Year', 'Fourth Year']
+    const assessment = assessments.find(
+      (a: Assessment) => a.courseId === courseId
+    )
 
-    return yearNames[year]
-  }
+    return {
+      id: courseId,
+      subject: e.offering.course.title,
+      score: assessment?.marks ?? "N/A",
+      maxmarks: assessment?.maxMarks ?? "N/A",
+      component: assessment?.componentName ?? "N/A",
+      faculty: "Prof. K. Verma",
+      date: "Nov 12, 2023",
+    }
+  }) ?? []
+
+  if (loading) {
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <Spinner size={28}/>
+    </div>
+  )
+}
+
+if (!student) {
+  return <div className="p-10 text-red-500">Student Not Found</div>
+}
+  
+  const studentInfo = [
+  { id: 1, label: 'Roll Number', value: student.rollNo },
+  { id: 2, label: 'Registration Number', value: student.regNo },
+  { id: 3, label: 'Email', value: student.user?.email },
+  { id: 4, label: 'Phone Number', value: student.phoneNo },
+  { id: 5, label: 'Parent Name', value: student.parentName },
+  { id: 6, label: 'Parent Phone', value: student.parentPhoneNo },
+  { id: 7, label: 'Section', value: student.section },
+  { id: 9, label: 'Hosteller', value: student.hosteller ? 'Yes' : 'No' },
+  { id: 10, label: 'Admission Type', value: student.admissionType },
+  { id: 11, label: 'Admission Date', value: new Date(student.admissionDate).toLocaleDateString() },
+  { id: 12, label: 'Batch', value: `${student.batch?.startYear}-${student.batch?.endYear}` },
+]
 
   return (
     <>
@@ -106,21 +108,21 @@ export default function StudentProfileView() {
               </div>
               <div>
                 <h1 className="text-3xl font-semibold">{student.name}</h1>
-                <p className="text-gray-500">B.Tech - {departmentMap[student.deptId]}</p>
+                <p className="text-gray-500">B.Tech - {student.dept.name}</p>
                 <p className="text-gray-500">
-                  Semester {student.semId} ({getYearFromSemester(student.semId)})
+                  Semester - {student.sem.number} 
                 </p>
                 <div className=" flex gap-5">
                   <span className="mt-2 inline-block bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-full">
-                    Batch {student.batchId}
+                    Batch {student.batch.startYear} - {student.batch.endYear}
                   </span>
-                  <span
+                  {/* <span
                     className={`mt-2 inline-block text-xs px-3 py-1 rounded-full ${
                       student.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
                     }`}
                   >
                     {student.isActive ? 'ACTIVE' : 'NOT ACTIVE'}
-                  </span>
+                  </span> */}
                 </div>
               </div>
             </div>
@@ -173,7 +175,6 @@ export default function StudentProfileView() {
                 <th className="px-5 py-3 text-left">Course ID</th>
                 <th className="px-5 py-3 text-left">Subject Name</th>
                 <th className="px-5 py-3 text-left">Score</th>
-                <th className="px-5 py-3 text-left">Grade</th>
                 <th className="px-5 py-3 text-left">Faculty</th>
                 <th className="px-5 py-3 text-left">Date Released</th>
               </tr>
@@ -184,12 +185,7 @@ export default function StudentProfileView() {
                 <tr key={course.id} className="hover:bg-gray-50">
                   <td className="px-5 py-4 font-medium">{course.id}</td>
                   <td className="px-5 py-4 text-gray-600">{course.subject}</td>
-                  <td className="px-5 py-4">{course.score}</td>
-                  <td className="px-5 py-4">
-                    <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded-full">
-                      {course.grade}
-                    </span>
-                  </td>
+                  <td className="px-5 py-4">{course.score} / {course.maxmarks}</td>
                   <td className="px-5 py-4 text-gray-600">{course.faculty}</td>
                   <td className="px-5 py-4 text-gray-600">{course.date}</td>
                 </tr>
