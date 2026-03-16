@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router'
-import { Admin_Sidebar } from '../modules/admin/admin_components/Admin_Sidebar'
-import { Admin_TopBar } from '../modules/admin/admin_components/Admin_TopBar'
+import { Admin_Sidebar } from '@/modules/admin/admin_components/common/Admin_Sidebar'
+import { Admin_TopBar } from '@/modules/admin/admin_components/common/Admin_TopBar'
 
 export function AdminLayout() {
   return (

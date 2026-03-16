@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router'
 import { departments } from '@/data/departments'
-import { BatchCard } from '@/modules/admin/admin_components/BatchCard'
+import { BatchCard } from '@/modules/admin/admin_components/batch/BatchCard'
 
 import {
   Users,

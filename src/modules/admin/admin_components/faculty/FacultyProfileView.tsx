@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router'
 import { facultyData } from '@/data/faculty'
-import { BatchCard } from './BatchCard'
+import { BatchCard } from '../batch/BatchCard'
 import { BookOpen, Briefcase, FolderKanban } from 'lucide-react'
 
 export default function FacultyProfileView() {
@@ -32,21 +32,16 @@ export default function FacultyProfileView() {
       </div>
 
       {/* TOP GRID */}
-
       <div className="flex gap-6 items-start">
-        {/* LEFT PROFILE CARD */}
-
         <div className="bg-white p-5 rounded-xl border border-slate-200 flex flex-col gap-6 min-h-[580px]">
           <div className="flex justify-between">
             <div className="flex gap-6">
               {/* Avatar */}
-
               <div className="w-30 h-30 rounded-xl bg-[#0B3D93] text-white flex items-center justify-center text-3xl font-semibold">
                 {initials}
               </div>
 
               {/* Basic Info */}
-
               <div className="flex flex-col gap-1">
                 <h2 className="text-2xl font-semibold text-[#0F172A]">{faculty.name}</h2>
                 <p className="text-[#64748B] text-sm">
@@ -67,7 +62,6 @@ export default function FacultyProfileView() {
             </div>
 
             {/* ACTION BUTTONS */}
-
             <div className="flex flex-col gap-4">
               <Link to="edit">
                 <button className="px-10 py-3 w-40 bg-[#0B3D93] text-white rounded-2xl text-sm font-medium cursor-pointer">
@@ -81,14 +75,12 @@ export default function FacultyProfileView() {
           </div>
 
           {/* PROFESSIONAL SUMMARY */}
-
           <div className="border-t border-slate-200 pt-4">
             <h3 className="text-sm font-semibold text-[#0F172A] mb-3">Professional Summary</h3>
             <p className="text-sm text-[#64748B] leading-relaxed">{faculty.summary}</p>
           </div>
 
           {/* SKILLS (MOVED INSIDE PROFILE CARD) */}
-
           <div className="border-t border-slate-200 pt-4">
             <h3 className="text-sm font-semibold text-[#0F172A] mb-3">Specialized Skills</h3>
             <div className="flex flex-wrap gap-2">
@@ -102,7 +94,6 @@ export default function FacultyProfileView() {
         </div>
 
         {/* RIGHT SIDE STATS */}
-
         <div className="flex flex-col gap-6">
           <BatchCard
             icon={BookOpen}

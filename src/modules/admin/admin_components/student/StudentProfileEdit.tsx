@@ -3,8 +3,8 @@ import { useState } from 'react'
 import { UserPlus, Bed, CheckCircle, UserCheck } from 'lucide-react'
 import { students } from '@/data/students'
 import type { StudentDirectoryProp } from '@/types/student'
-import { ToggleCard } from '@/components/ToggleCard'
-import { Spinner } from '@/components/common/Spinner'
+import { ToggleCard } from '@/components/ui common/ToggleCard'
+import { Spinner } from '@/components/ui common/Spinner'
 
 export default function StudentProfileEdit() {
   const { id } = useParams<{ id: string }>()

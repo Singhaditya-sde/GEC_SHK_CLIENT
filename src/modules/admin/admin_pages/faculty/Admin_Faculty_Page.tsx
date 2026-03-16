@@ -11,7 +11,7 @@ import {
   ChevronLeft,
   Eye,
 } from 'lucide-react'
-import { BatchCard } from '../admin_components/BatchCard'
+import { BatchCard } from '../../admin_components/batch/BatchCard'
 import { useState } from 'react'
 import { facultyData } from '@/data/faculty'
 

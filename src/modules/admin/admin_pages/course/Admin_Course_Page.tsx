@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { BatchCard } from "../admin_components/BatchCard"
+import { BatchCard } from "../../admin_components/batch/BatchCard"
 import { Search, SlidersHorizontal, Plus } from "lucide-react"
 import { BookOpen, Zap, Layers, Building2 } from "lucide-react"
 import { courses } from "@/data/course"

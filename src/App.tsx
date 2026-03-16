@@ -1,34 +1,19 @@
-import './index.css'
-import { useEffect } from 'react'
-import { Routes, Route, Navigate } from 'react-router'
-import ScrollToTop from './components/common/ScrollToTop'
-import { ProtectedRoute } from './routes/ProtectedRoute'
-import { AdminLayout } from './Layout/AminLayout'
-import { AdminDashboard } from './modules/admin/admin_pages/Admin_Dashboard'
-import AdminStudentPage from './modules/admin/admin_pages/Admin_Student_Page'
-import { AdminBulkUploadPage } from './modules/admin/admin_pages/Admin_Bulk_UploadPage'
-import { AdminFacultyPage } from './modules/admin/admin_pages/Admin_Faculty_Page'
-import { AdminDepartmentPage } from './modules/admin/admin_pages/Admin_Department_Page'
-import { AdminAddFacultyPage } from './modules/admin/admin_pages/Admin_Add_FacultyPage'
-import { LoginPage } from './modules/login/Login_Page'
-import { useAuthStore } from './store/authStore'
-import { Spinner } from './components/common/Spinner'
-import { AddSingleStudentForm } from './modules/admin/admin_components/AddSingleStudentForm'
-import StudentProfileView from './modules/admin/admin_components/StudentProfileView'
-import StudentProfileEdit from './modules/admin/admin_components/StudentProfileEdit'
-import FacultyProfileView from './modules/admin/admin_components/FacultyProfileView'
-import FacultyProfileEdit from './modules/admin/admin_components/FacultyProfileEdit'
-import AdminCoursePage from './modules/admin/admin_pages/Admin_Course_Page'
-import AdminAttendancePage from './modules/admin/admin_pages/Admin_Attendance_Page'
-import DepartmentDetailView from './modules/admin/admin_pages/Department_Detail_View_Page'
-import DepartmentEditPage from './modules/admin/admin_pages/Department_Edit_Page'
+import "./index.css"
+import { Routes, Route, Navigate } from "react-router"
+import { useEffect } from "react"
+
+import ScrollToTop from "@/components/navigation/ScrollToTop"
+import { useAuthStore } from "@/store/authStore"
+import { Spinner } from "./components/ui common/Spinner"
+
+import { AdminRoutes } from "@/routes/adminRoutes"
+// import { FacultyRoutes } from "@/routes/facultyRoutes"
+// import { StudentRoutes } from "@/routes/studentRoutes"
+
+import { LoginPage } from "@/modules/login/Login_Page"
 
 function App() {
-  const user = useAuthStore((state) => state.user)
-
-  const checkAuth = useAuthStore((state) => state.checkAuth)
-
-  const isCheckingAuth = useAuthStore((state) => state.isCheckingAuth)
+  const { user, checkAuth, isCheckingAuth } = useAuthStore()
 
   useEffect(() => {
     checkAuth()
@@ -43,21 +28,12 @@ function App() {
   }
 
   const RootRedirect = () => {
-    if (!user) {
-      return <LoginPage />
-    }
+    if (!user) return <LoginPage />
 
-    if (user.role === 'ADMIN') {
-      return <Navigate to="/admin/dashboard" replace />
-    }
-
-    if (user.role === 'FACULTY') {
-      return <Navigate to="/faculty/dashboard" replace />
-    }
-
-    if (user.role === 'STUDENT') {
+    if (user.role === "ADMIN") return <Navigate to="/admin/dashboard" replace />
+    if (user.role === "FACULTY") return <Navigate to="/faculty/dashboard" replace />
+    if (user.role === "STUDENT")
       return <Navigate to={`/student/dashboard/${user.id}`} replace />
-    }
 
     return <LoginPage />
   }
@@ -65,55 +41,12 @@ function App() {
   return (
     <>
       <ScrollToTop />
+
       <Routes>
         <Route path="/" element={<RootRedirect />} />
-
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <AdminLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<AdminDashboard />} />
-          <Route path="dashboard" element={<AdminDashboard />} />
-
-          <Route path="students">
-            <Route index element={<AdminStudentPage />} />
-            <Route path="add-student" element={<AddSingleStudentForm />} />
-            <Route path="bulk-upload" element={<AdminBulkUploadPage />} />
-            <Route path=":id">
-              <Route index element={<StudentProfileView />} />
-              <Route path="edit" element={<StudentProfileEdit />} />
-            </Route>
-          </Route>
-
-          <Route path="faculty">
-            <Route index element={<AdminFacultyPage />} />
-            <Route path="add_faculty" element={<AdminAddFacultyPage />} />
-            <Route path=":id">
-              <Route index element={<FacultyProfileView />} />
-              <Route path="edit" element={<FacultyProfileEdit />} />
-            </Route>
-          </Route>
-
-          <Route path="departments">
-            <Route index element={<AdminDepartmentPage />}/>
-            <Route path=':id/:name'>
-              <Route path='view' element={<DepartmentDetailView />}/>
-              <Route path='edit' element={<DepartmentEditPage />}/>
-            </Route>
-          </Route>
-
-          <Route path='course'>
-            <Route index element={<AdminCoursePage />}/>
-          </Route>
-
-          <Route path='attendance'>
-            <Route index element={<AdminAttendancePage />}/>
-          </Route>
-        </Route>
+          {AdminRoutes}
+          {/* {FacultyRoutes}
+          {StudentRoutes} */}
       </Routes>
     </>
   )

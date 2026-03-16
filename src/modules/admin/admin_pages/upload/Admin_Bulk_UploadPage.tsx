@@ -10,10 +10,10 @@ import {
 } from 'lucide-react'
 
 import { useRef, useState } from 'react'
-import { BatchCard } from '../admin_components/BatchCard'
-import { ToggleCard } from '../../../components/ToggleCard'
+import { BatchCard } from '../../admin_components/batch/BatchCard'
+import { ToggleCard } from '@/components/ui common/ToggleCard'
 import { uploadBulkStudent } from '@/services/upload'
-import { Spinner } from '@/components/common/Spinner'
+import { Spinner } from '@/components/ui common/Spinner'
 
 const CardStats = [
   {

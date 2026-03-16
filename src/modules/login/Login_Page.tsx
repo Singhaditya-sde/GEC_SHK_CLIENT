@@ -5,7 +5,7 @@ import { useAuthStore } from '../../store/authStore'
 import api from '../../services/api'
 import { useNavigate } from 'react-router'
 import type { User } from '../../store/authStore'
-import { Spinner } from '@/components/common/Spinner'
+import { Spinner } from '@/components/ui common/Spinner'
 
 interface LoginResponse {
   data: User

@@ -1,6 +1,6 @@
 import { Building2, FlaskConical, Landmark } from 'lucide-react'
-import { BatchCard } from '@/modules/admin/admin_components/BatchCard'
-import { DepartmentCard } from '@/modules/admin/admin_components/DepartmentCard'
+import { BatchCard } from '@/modules/admin/admin_components/batch/BatchCard'
+import { DepartmentCard } from '@/modules/admin/admin_components/department/DepartmentCard'
 import { departments } from '@/data/departments'
 
 
