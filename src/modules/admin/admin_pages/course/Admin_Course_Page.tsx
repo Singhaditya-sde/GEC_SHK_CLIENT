@@ -105,11 +105,12 @@ export default function AdminCoursePage() {
           onChange={(e) => setDepartmentFilter(e.target.value)}
           className="border border-slate-200 bg-[#F8FAFC] rounded-full px-4 py-3 text-sm"
         >
-          <option value="All">All Departments</option>
-          <option value="CSE">CSE</option>
-          <option value="Mechanical">Mechanical</option>
-          <option value="Electrical">Electrical</option>
-          <option value="General">General</option>
+          <option value="CSE">Computer Science Engineering (CSE)</option>
+          <option value="ECE">Electronics & Communication Engineering (ECE)</option>
+          <option value="EE">Electrical Engineering (EE)</option>
+          <option value="Civil">Civil Engineering</option>
+          <option value="ECH">Electronics & Computer Engineering (ECH)</option>
+          <option value="Mechatronics">Mechatronics Engineering</option>
         </select>
 
         {/* SEMESTER FILTER */}
