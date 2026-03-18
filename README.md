@@ -226,4 +226,4 @@ Unauthorized users are automatically redirected to the login page.
 **Aditya Kumar**
 
 Full Stack Developer  
-MERN Stack | TypeScript | AWS | Docker 
+MERN Stack | TypeScript | AWS | Docker | PostgreSQL
