@@ -102,7 +102,7 @@ The frontend communicates with the backend API deployed on **AWS EC2 using Docke
 Create a `.env.production` file for production builds.
 
 ```env
-VITE_API_URL=https://api.gecshk.dev
+VITE_API_URL=Backend server
 ```
 
 Only variables prefixed with `VITE_` are exposed to the frontend by **Vite**.
