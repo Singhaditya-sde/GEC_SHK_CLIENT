@@ -220,10 +220,3 @@ Protected routes are implemented using a custom **ProtectedRoute** component.
 Unauthorized users are automatically redirected to the login page.
 
 ---
-
-## 🧑‍💻 Author
-
-**Aditya Kumar**
-
-Full Stack Developer  
-MERN Stack | TypeScript | AWS | Docker | PostgreSQL
