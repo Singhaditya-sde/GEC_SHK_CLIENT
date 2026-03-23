@@ -217,6 +217,5 @@ Authentication state is managed using **Zustand**.
 
 Protected routes are implemented using a custom **ProtectedRoute** component.
 
-Unauthorized users are automatically redirected to the login page.
 
 ---
