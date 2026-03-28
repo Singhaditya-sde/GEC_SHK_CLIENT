@@ -215,7 +215,4 @@ src
 
 Authentication state is managed using **Zustand**.
 
-Protected routes are implemented using a custom **ProtectedRoute** component.
 
-
----
