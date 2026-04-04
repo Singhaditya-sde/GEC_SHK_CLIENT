@@ -211,8 +211,3 @@ src
 
 ---
 
-## 🔐 Authentication
-
-Authentication state is managed using **Zustand**.
-
-
