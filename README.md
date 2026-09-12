@@ -209,5 +209,8 @@ src
 └── main.tsx          # Application entry point
 ```
 
+## 📸 Dashboard
+
+![JobFlow Dashboard](SCR-20250925-twtl.png)
 ---
 
