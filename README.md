@@ -212,5 +212,10 @@ src
 ## 📸 Dashboard
 
 ![JobFlow Dashboard](SCR-20250925-twtl.png)
+
+(SCR-20250925-twxp.png)
+(SCR-20250925-twzn.png)
+(SCR-20250925-txbj.png)
+(SCR-20250925-txdv.png)
 ---
 
