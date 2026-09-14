@@ -6,11 +6,6 @@ This project provides the administrative interface for managing students, facult
 
 The application is built using **React, TypeScript, Vite, and TailwindCSS**, and deployed on **AWS S3 with CloudFront CDN** for fast and scalable delivery.
 
----
-
-## 🌐 Live Application
-
-https://gecshk.dev
 
 ---
 
